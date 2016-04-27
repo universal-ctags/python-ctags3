@@ -1,10 +1,10 @@
 from ctags import CTags, TagEntry
 from unittest import TestCase
-from subprocess import POpen
+import subprocess
 
-class TestCTags(Testcase):
+class TestCTags(TestCase):
     def setUp(self):
-        proc = POpen('ctags --fields=afmikKlnsStz ../_readtags.c'
+        proc = subprocess.Popen('ctags --fields=afmikKlnsStz ../_readtags.c'
                      ' ../include/readtags.h ../readtags.c',
                      shell=True,
                      stdin=subprocess.PIPE,
