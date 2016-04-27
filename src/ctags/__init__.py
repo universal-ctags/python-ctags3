@@ -20,7 +20,7 @@ along with Python-Ctags.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 
-from _readtags import TagEntry, CTags
+from ._readtags import TagEntry, CTags
 __all__ = ['TagEntry', 'CTags']
 
 # sortType
