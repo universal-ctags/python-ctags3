@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/jonashaag/python-ctags3.svg?branch=py3)](https://travis-ci.org/jonashaag/python-ctags3)
+
 *NOTE*: This a fork from the original python-ctags that adds support for Python 3. It is currently maintained by Jonas Haag.
 
 Exuberant Ctags supports indexing of many modern programming languages.  Python is a powerful scriptable dynamic language.  Using Python to access Ctags index file is a natural fit in extending an application's capability to examine source code.
