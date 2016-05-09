@@ -1,17 +1,19 @@
+*NOTE*: This a fork from the original python-ctags that adds support for Python 3. It is currently maintained by Jonas Haag.
+
 Exuberant Ctags supports indexing of many modern programming languages.  Python is a powerful scriptable dynamic language.  Using Python to access Ctags index file is a natural fit in extending an application's capability to examine source code.
 
 This project wrote a wrapper for read tags library.  I have been using the package in a couple of projects and it has been shown that it could easily handle hundreds of  source files.
 
 ## Requirements
  * C compiler (gcc/msvc)
- * Python version > 2.3
+ * Python version >= 2.6
  * [http://prdownloads.sourceforge.net/ctags/ctags-5.7.tar.gz Install Exuberant Ctags] (need it to generate tags file).
 
 ## Installation
 
 From Python Package Index,
 ```bash
-easy_install python-ctags
+pip install python-ctags3
 ```
 
 From https://github.com/hddmet/python-ctags/archive/master.zip,
