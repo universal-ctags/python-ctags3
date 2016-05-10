@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 1.2.1 (May 10, 2016)
+- Fix packaging (Jonas Haag)
+
 ## Version 1.2 (May 10, 2016)
 - Internal clean up (Louis Sautier)
 
