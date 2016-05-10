@@ -2,3 +2,4 @@ include README.md
 include src/_readtags.c
 include src/readtags.c
 include src/include/readtags.h
+recursive-include tests *.py
