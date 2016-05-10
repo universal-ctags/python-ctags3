@@ -1,5 +1,0 @@
-setup.py
-src/_readtags.c
-src/readtags.c
-src/include/readtags.h
-src/ctags/__init__.py
