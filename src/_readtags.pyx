@@ -84,6 +84,10 @@ cdef class TagEntry:
 
             return result
 
+    def get_extra_fields(self):
+       return (self.c_entry.fields.list[i].key for i in range(self.c_entry.fields.count))
+
+
 cdef class CTags:
     cdef tagFile* file
     cdef tagFileInfo info
