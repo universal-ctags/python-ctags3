@@ -45,7 +45,7 @@ cdef class TagEntry:
         else:
             # It will crash if we mix NULL/0/None
             # don't mix comparison of type
-            result = ctagsField(&self.c_entry, key)
+            result = ctagsField(&self.c_entry, key.encode())
             if result == NULL:
                 return None
 
