@@ -25,11 +25,6 @@ include "readtags.pxi"
 cdef class TagEntry:
     cdef tagEntry c_entry
 
-    def __cinit__(self):
-        self.c_entry.fields.count = 0
-        self.c_entry.fields.list = NULL
-
-
     def __getitem__(self, key):
         cdef char* result
         if key == 'name':
