@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 1.2.3
+- Include examples in distribution (Louis Sautier)
+
 ## Version 1.2.2
 - Include tests in distribution (Louis Sautier)
 
