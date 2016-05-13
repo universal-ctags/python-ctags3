@@ -26,7 +26,6 @@ cdef class TagEntry:
     cdef tagEntry c_entry
 
     def __getitem__(self, key):
-        cdef char* result
         if key == 'name':
             return self.c_entry.name
         elif key == 'file':

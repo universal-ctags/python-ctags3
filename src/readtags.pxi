@@ -36,10 +36,10 @@ cdef extern from "readtags.h":
             int error_number
 
     ctypedef struct programType "program":
-        char *author
-        char *name
-        char *url
-        char *version
+        const char *author
+        const char *name
+        const char *url
+        const char *version
 
     ctypedef struct tagFileInfo:
         statusType status
@@ -48,11 +48,11 @@ cdef extern from "readtags.h":
 
 
     ctypedef struct tagExtensionField:
-        char* key
-        char* value
+        const char* key
+        const char* value
 
     ctypedef struct addressType "address":
-        char* pattern
+        const char* pattern
         unsigned long lineNumber
 
     ctypedef struct fieldsType:
@@ -60,12 +60,12 @@ cdef extern from "readtags.h":
         tagExtensionField *list
 
     ctypedef struct tagEntry:
-        char* name
-        char* file
+        const char* name
+        const char* file
 
         addressType address
 
-        char* kind
+        const char* kind
         short fileScope
 
         fieldsType fields
@@ -75,12 +75,12 @@ cdef extern from "readtags.h":
         TagSuccess
 
 
-    tagFile* ctagsOpen "tagsOpen" (char *filePath, tagFileInfo *info)
-    tagResult ctagsSetSortType "tagsSetSortType" (tagFile* file, tagSortType type)
-    tagResult ctagsFirst "tagsFirst" (tagFile *file, tagEntry *entry)
-#C++:    char *ctagsField "tagsField" (tagEntry *entry, char *key) except +MemoryError
-    char *ctagsField "tagsField" (tagEntry *entry, char *key)
-    tagResult ctagsFind "tagsFind" (tagFile *file, tagEntry *entry, char *name, int options)
-    tagResult ctagsNext "tagsNext" (tagFile *file, tagEntry *entry)
+    tagFile* ctagsOpen "tagsOpen" (const char *const filePath, tagFileInfo *const info)
+    tagResult ctagsSetSortType "tagsSetSortType" (tagFile *const file, const tagSortType type)
+    tagResult ctagsFirst "tagsFirst" (tagFile *const file, tagEntry *const entry)
+#C++:    const char *ctagsField "tagsField" (const tagEntry *const entry, const char *const key) except +MemoryError
+    const char *ctagsField "tagsField" (const tagEntry *const entry, const char *const key)
+    tagResult ctagsFind "tagsFind" (tagFile *const file, tagEntry *const entry, const char *const name, const int options)
+    tagResult ctagsNext "tagsNext" (tagFile *const file, tagEntry *const entry)
     tagResult ctagsFindNext "tagsFindNext" (tagFile *file, tagEntry *entry)
-    tagResult ctagsClose "tagsClose" (tagFile *file)
+    tagResult ctagsClose "tagsClose" (tagFile *const file)
