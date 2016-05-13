@@ -71,19 +71,28 @@ entry = TagEntry()
 status = tagFile.first(entry)
 
 if status:
-    # Available TagEntry keys:
+    # The following TagEntry keys are always available:
     #  name - name of tag
     #  file - path of source file containing definition of tag
-    #  pattern - pattern for locating source line (None if no pattern)
-    #  lineNumber - line number in source file of tag definition (may be zero if not known)
-    #  kind - kind of tag (none if not known)
+    #  pattern - pattern for locating source line
+    #            (None if no pattern, this should no huppen with a correct
+    #             tag file)
     #  fileScope - is tag of file-limited scope?
+    #
+    # Other keys will be assumed as an extensionkey and will raise a
+    # KeyError if no such key is found.
+    # Other keys include :
+    #  lineNumber - line number in source file of tag definition
+    #  kind - kind of tag
     
-    # Note: other keys will be assumed as an extension key and will 
-    # return None if no such key is found 
-
     print entry['name']
     print entry['kind']
+    try:
+        entry['lineNumber']
+    except KeyError:
+        print "Entry has no lineNumber"
+    else:
+        print "Entry has a lineNumber"
 ```
 
 **Finding a Tag Entry**

@@ -35,10 +35,12 @@ cdef class TagEntry:
                 return None
             return self.c_entry.address.pattern 
         elif key == 'lineNumber':
-            return self.c_entry.address.lineNumber 
+            if not self.c_entry.address.lineNumber:
+                raise KeyError(key)
+            return self.c_entry.address.lineNumber
         elif key == 'kind':
             if self.c_entry.kind == NULL:
-                return None
+                raise KeyError(key)
             return self.c_entry.kind
         elif key == 'fileScope':
             return self.c_entry.fileScope 
@@ -47,7 +49,7 @@ cdef class TagEntry:
             # don't mix comparison of type
             result = ctagsField(&self.c_entry, key.encode())
             if result == NULL:
-                return None
+                raise KeyError(key)
 
             return result
 
