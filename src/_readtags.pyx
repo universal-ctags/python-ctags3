@@ -30,33 +30,6 @@ cdef class TagEntry:
         self.c_entry.fields.list = NULL
 
 
-    def __setitem__(self, key, item):
-        if key == 'name':
-            self.c_entry.name = item 
-        elif key == 'file':
-            self.c_entry.file = item
-        elif key == 'pattern':
-            self.c_entry.address.pattern = item
-        elif key == 'lineNumber':
-            self.c_entry.address.lineNumber = item
-        elif key == 'kind':
-            self.c_entry.kind = item
-        elif key == 'fileScope':
-            self.c_entry.fileScope = item
-        elif key == 'fields':
-            # fields.list is allocated by readtags.c
-            if self.c_entry.fields.count != len(item):
-                return 
-
-            fields = item
-            if self.c_entry.fields.list != NULL:
-                free(self.c_entry.fields.list)
-                self.c_entry.fields.list = NULL
-
-            for k, v in fields.iteritems():
-                self.c_entry.fields.list.key = k
-                self.c_entry.fields.list.value = v
-
     def __getitem__(self, key):
         cdef char* result
         if key == 'name':
