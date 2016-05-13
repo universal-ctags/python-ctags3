@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 1.2.2
+- Include tests in distribution (Louis Sautier)
+
 ## Version 1.2.1 (May 10, 2016)
 - Fix packaging (Jonas Haag)
 
