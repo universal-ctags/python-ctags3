@@ -47,14 +47,25 @@ except:
 #  opened -  was the tag file successfully opened?
 #  error_number - errno value when 'opened' is false
 #  format - format of tag file (1 = original, 2 = extended)
-#  sort - how is the tag file sorted? 
-#  author - name of author of generating program (may be empy string)
-#  name - name of program (may be empy string)
-#  url - URL of distribution (may be empy string)
-#  version - program version (may be empty string)
+#  sort - how is the tag file sorted?
+#
+# Other keys may be available:
+#  author - name of author of generating program
+#  name - name of program
+#  url - URL of distribution
+#  version - program version
+# If one of them is not present a KeyError is raised.
 
-print tagFile['name']
-print tagFile['author']
+try:
+    print tagFile['name']
+except KeyError:
+    print "No 'name' in the tagfile"
+
+try:
+    print tagFile['author']
+except KeyError:
+    print "No 'author' in the tagfile"
+
 print tagFile['format']
 
 # Available sort type:

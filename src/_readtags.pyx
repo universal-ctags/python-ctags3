@@ -86,30 +86,27 @@ cdef class CTags:
             ctagsClose(self.file)
 
     def __getitem__(self, key):
+        ret = None
         if key == 'opened':
             return self.info.status.opened
-        if key == 'error_number':
+        elif key == 'error_number':
             return self.info.status.error_number
-        if key == 'format':
+        elif key == 'format':
             return self.info.file.format
-        if key == 'sort':
+        elif key == 'sort':
             return self.info.file.sort
-        if key == 'author':
-            if self.info.program.author == NULL:
-                return ''
-            return self.info.program.author
-        if key == 'name':
-            if self.info.program.name == NULL:
-                return ''
-            return self.info.program.name
-        if key == 'url':
-            if self.info.program.url == NULL:
-                return ''
-            return self.info.program.url
-        if key == 'version':
-            if self.info.program.version == NULL:
-                return ''
-            return self.info.program.version
+        else:
+            if key == 'author':
+                ret = self.info.program.author
+            elif key == 'name':
+                ret = self.info.program.name
+            elif key == 'url':
+                ret = self.info.program.url
+            elif key == 'version':
+                ret = self.info.program.version
+            if ret is None:
+                raise KeyError(key)
+            return ret
 
 
     def open(self, filepath):
