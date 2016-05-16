@@ -22,62 +22,27 @@ cdef extern from "string.h":
 
 include "stdlib.pxi"
 include "readtags.pxi"
-from collections.abc import Mapping
 
-cdef class cTagEntry:
-    cdef tagEntry c_entry
-
-    def __getitem__(self, key):
-        if key == 'name':
-            return self.c_entry.name
-        elif key == 'file':
-            return self.c_entry.file 
-        elif key == 'pattern':
-            if self.c_entry.address.pattern == NULL:
-                return None
-            return self.c_entry.address.pattern 
-        elif key == 'lineNumber':
-            if not self.c_entry.address.lineNumber:
-                raise KeyError(key)
-            return self.c_entry.address.lineNumber
-        elif key == 'kind':
-            if self.c_entry.kind == NULL:
-                raise KeyError(key)
-            return self.c_entry.kind
-        elif key == 'fileScope':
-            return self.c_entry.fileScope 
-        else:
-            # It will crash if we mix NULL/0/None
-            # don't mix comparison of type
-            result = ctagsField(&self.c_entry, key.encode())
-            if result == NULL:
-                raise KeyError(key)
-
-            return result
-
-    def __iter__(self):
-        yield from ('name', 'file', 'pattern', 'fileScope')
-        if self.c_entry.address.lineNumber:
-            yield 'lineNumber'
-        if self.c_entry.kind != NULL:
-            yield 'kind'
-        for index in range(self.c_entry.fields.count):
-            key = self.c_entry.fields.list[index].key
-            yield key.decode()
-
-    def __len__(self):
-        return (4   # Number of fields always present.
-              + bool(self.c_entry.address.lineNumber) # Do we have lineNumber ?
-              + bool(self.c_entry.kind != NULL) # Do we have kind ?
-              + self.c_entry.fields.count # Number of extra fields.
-               )
-
-class TagEntry(cTagEntry, Mapping):
-    pass
+cdef create_tagEntry(const tagEntry* const c_entry):
+    cdef dict ret = {}
+    ret['name'] = c_entry.name
+    ret['file'] = c_entry.file
+    ret['fileScope'] = c_entry.fileScope
+    if c_entry.address.pattern != NULL:
+        ret['pattern'] = c_entry.address.pattern
+    if c_entry.address.lineNumber:
+        ret['lineNumber'] = c_entry.address.lineNumber
+    if c_entry.kind != NULL:
+        ret['kind'] = c_entry.kind
+    for index in range(c_entry.fields.count):
+        key = c_entry.fields.list[index].key
+        ret[key.decode()] = c_entry.fields.list[index].value
+    return ret
 
 cdef class CTags:
     cdef tagFile* file
     cdef tagFileInfo info
+    cdef tagEntry c_entry
 
     def __cinit__(self, filepath):
         self.file = ctagsOpen(filepath, &self.info)
@@ -87,7 +52,6 @@ cdef class CTags:
                           filepath)
 
     def __dealloc__(self):
-
         if self.file:
             ctagsClose(self.file)
 
@@ -115,23 +79,27 @@ cdef class CTags:
         if not success:
             raise RuntimeError()
 
-    def first(self, cTagEntry entry):
-        success = ctagsFirst(self.file, &entry.c_entry)
+    def first(self):
+        success = ctagsFirst(self.file, &self.c_entry)
         if not success:
             raise RuntimeError()
+        return create_tagEntry(&self.c_entry)
 
-    def find(self, cTagEntry entry, char* name, int options):
-        success = ctagsFind(self.file, &entry.c_entry, name, option)
+    def find(self, bytes name, int options):
+        success = ctagsFind(self.file, &self.c_entry, name, options)
         if not success:
             raise RuntimeError()
+        return create_tagEntry(&self.c_entry)
 
-    def findNext(self, cTagEntry entry):
-        success = ctagsFindNext(self.file, &entry.c_entry)
+    def findNext(self):
+        success = ctagsFindNext(self.file, &self.c_entry)
         if not success:
             raise RuntimeError()
+        return create_tagEntry(&self.c_entry)
 
-    def next(self, cTagEntry entry):
-        success = ctagsNext(self.file, &entry.c_entry)
+    def next(self):
+        success = ctagsNext(self.file, &self.c_entry)
         if not success:
             raise RuntimeError()
+        return create_tagEntry(&self.c_entry)
 

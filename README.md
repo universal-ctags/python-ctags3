@@ -35,7 +35,7 @@ ctags --fields=afmikKlnsStz readtags.c  readtags.h
 **Opening Tags File**
 ```python
 import ctags
-from ctags import CTags, TagEntry
+from ctags import CTags
 import sys
 
 try:
@@ -79,14 +79,13 @@ tagFile.setSortType(ctags.TAG_SORTED)
 
 **Obtaining First Tag Entry**
 ```python
-entry = TagEntry()
 try:
-    tagFile.first(entry)
+    entry = tagFile.first()
 except:
     print "Something wrong"
     sys.exit(-1)
 
-# The following TagEntry keys are always available:
+# The return entry is a dict. The following keys are always available:
 #  name - name of tag
 #  file - path of source file containing definition of tag
 #  pattern - pattern for locating source line
@@ -94,26 +93,19 @@ except:
 #             tag file)
 #  fileScope - is tag of file-limited scope?
 #
-# Other keys will be assumed as an extensionkey and will raise a
-# KeyError if no such key is found.
+# The dict may contain other keys (extension keys).
 # Other keys include :
 #  lineNumber - line number in source file of tag definition
 #  kind - kind of tag
 
 print entry['name']
-print entry['kind']
+print entry['file']
 try:
     entry['lineNumber']
 except KeyError:
     print "Entry has no lineNumber"
 else:
     print "Entry has a lineNumber"
-
-# TagEntry are Mapping. It is possible to loop for all the keys in the
-# entry as it is done with a dict.
-
-for k, v in entry.items():
-    print k, "value is", v
 ```
 
 **Finding a Tag Entry**
@@ -125,7 +117,7 @@ for k, v in entry.items():
 # TAG_OBSERVECASE - case sensitive and allowed binary search to perform
 
 try:
-    tagFile.find(entry, 'find', ctags.TAG_PARTIALMATCH | ctags.TAG_IGNORECASE)
+    entry = tagFile.find('find', ctags.TAG_PARTIALMATCH | ctags.TAG_IGNORECASE)
 except:
     print "Not found"
     sys.exit(-1)
@@ -136,15 +128,17 @@ print entry['pattern']
 print entry['kind']
 
 # Find the next tag matching the name and options supplied to the 
-# most recent call to tagFile.find().  (replace the entry if found)
+# most recent call to tagFile.find().
+# Raise if no entry is found.
 try:
-    tagFile.findNext(entry)
+    entry = tagFile.findNext()
 except:
     ...
 
-# Step to the next tag in the file (replace entry if found)
+# Step to the next tag in the file.
+# Raise if no entry is found.
 try:
-    tagFile.next(entry)
+    entry = tagFile.next()
 except:
     ...
 ```
