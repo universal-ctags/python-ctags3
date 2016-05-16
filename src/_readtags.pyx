@@ -43,6 +43,7 @@ cdef class CTags:
     cdef tagFile* file
     cdef tagFileInfo info
     cdef tagEntry c_entry
+    cdef object current_id
 
     def __cinit__(self, filepath):
         self.file = ctagsOpen(filepath, &self.info)
@@ -79,27 +80,79 @@ cdef class CTags:
         if not success:
             raise RuntimeError()
 
-    def first(self):
+    cdef first(self):
         success = ctagsFirst(self.file, &self.c_entry)
         if not success:
             raise RuntimeError()
         return create_tagEntry(&self.c_entry)
 
-    def find(self, bytes name, int options):
+    cdef find(self, bytes name, int options):
         success = ctagsFind(self.file, &self.c_entry, name, options)
         if not success:
             raise RuntimeError()
         return create_tagEntry(&self.c_entry)
 
-    def findNext(self):
+    cdef findNext(self):
         success = ctagsFindNext(self.file, &self.c_entry)
         if not success:
             raise RuntimeError()
         return create_tagEntry(&self.c_entry)
 
-    def next(self):
+    cdef next(self):
         success = ctagsNext(self.file, &self.c_entry)
         if not success:
             raise RuntimeError()
         return create_tagEntry(&self.c_entry)
+
+    def find_tags(self, bytes name, int options):
+        """ Find tags corresponding to name in the tag file.
+            @name : a bytes array to search to.
+            @options : A option flags for the search.
+            @return : A iterator on all tags corresponding to the search.
+
+            WARNING: Only one iterator can run on a tag file.
+            If you use another iterator (by calling all_tags or find_tags),
+            any previous iterator will be invalidate and raise a RuntimeError.
+        """
+        try:
+            first = self.find(name, options)
+            self.current_id = first
+            yield first
+        except KeyError:
+            raise StopIteration from None
+
+        while True:
+            if self.current_id is not first:
+                raise RuntimeError("Only one search/list generator at a time")
+            try:
+                other = self.findNext()
+            except RuntimeError:
+                raise StopIteration from None
+            else:
+                yield other
+
+    def all_tags(self):
+        """ List all tags in the tag file.
+            @return : A iterator on all tags in the file.
+
+            WARNING: Only one iterator can run on a tag file.
+            If you use another iterator (by calling all_tags or find_tags),
+            any previous iterator will be invalidate and raise a RuntimeError.
+        """
+        try:
+            first = self.first()
+            self.current_id = first
+            yield first
+        except KeyError:
+            raise StopIteration from None
+
+        while True:
+            if self.current_id is not first:
+                raise RuntimeError("Only one search/list generator at a time")
+            try:
+                other = self.next()
+            except RuntimeError:
+                raise StopIteration from None
+            else:
+                yield other
 

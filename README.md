@@ -77,15 +77,13 @@ print tagFile['format']
 tagFile.setSortType(ctags.TAG_SORTED)
 ```
 
-**Obtaining First Tag Entry**
+**Listing Tag Entries**
 ```python
-try:
-    entry = tagFile.first()
-except:
-    print "Something wrong"
-    sys.exit(-1)
+# A generator of all tags in the file can be obtain with:
+all_tags = tagFile.all_tags()
 
-# The return entry is a dict. The following keys are always available:
+# The generator yield a dict for each entry.
+# The following keys are always available for a entry:
 #  name - name of tag
 #  file - path of source file containing definition of tag
 #  pattern - pattern for locating source line
@@ -98,34 +96,30 @@ except:
 #  lineNumber - line number in source file of tag definition
 #  kind - kind of tag
 
-print entry['name']
-print entry['file']
-try:
-    entry['lineNumber']
-except KeyError:
-    print "Entry has no lineNumber"
-else:
-    print "Entry has a lineNumber"
+for entry in all_tags:
+    print entry['name']
+    print entry['file']
+    try:
+        entry['lineNumber']
+    except KeyError:
+        print "Entry has no lineNumber"
+    else:
+        print "Entry has a lineNumber"
 ```
 
-**Finding a Tag Entry**
-```python   
+**Finding Tag Entries**
+```python
 # Available options: 
 # TAG_PARTIALMATCH - begin with
 # TAG_FULLMATCH - full length matching
 # TAG_IGNORECASE - disable binary search
 # TAG_OBSERVECASE - case sensitive and allowed binary search to perform
 
-try:
-    entry = tagFile.find('find', ctags.TAG_PARTIALMATCH | ctags.TAG_IGNORECASE)
-except:
-    print "Not found"
-    sys.exit(-1)
-
-print 'found'
-print entry['lineNumber']
-print entry['pattern']
-print entry['kind']
+found_tags = tagFile.find_tags('find', ctags.TAG_PARTIALMATCH | ctags.TAG_IGNORECASE)
+for entry in found_tags:
+    print entry['lineNumber']
+    print entry['pattern']
+    print entry['kind']
 
 # Find the next tag matching the name and options supplied to the 
 # most recent call to tagFile.find().
