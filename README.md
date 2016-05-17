@@ -40,7 +40,8 @@ import sys
 
 try:
     tagFile = CTags('tags')
-except:
+except OSError as err:
+    print err
     sys.exit(1)
 
 # Available file information keys:
@@ -73,43 +74,46 @@ print tagFile['format']
 
 # Note: use this only if you know how the tags file is sorted which is 
 # specified when you generate the tag file
-status = tagFile.setSortType(ctags.TAG_SORTED)
+tagFile.setSortType(ctags.TAG_SORTED)
 ```
 
 **Obtaining First Tag Entry**
 ```python
 entry = TagEntry()
-status = tagFile.first(entry)
+try:
+    tagFile.first(entry)
+except:
+    print "Something wrong"
+    sys.exit(-1)
 
-if status:
-    # The following TagEntry keys are always available:
-    #  name - name of tag
-    #  file - path of source file containing definition of tag
-    #  pattern - pattern for locating source line
-    #            (None if no pattern, this should no huppen with a correct
-    #             tag file)
-    #  fileScope - is tag of file-limited scope?
-    #
-    # Other keys will be assumed as an extensionkey and will raise a
-    # KeyError if no such key is found.
-    # Other keys include :
-    #  lineNumber - line number in source file of tag definition
-    #  kind - kind of tag
-    
-    print entry['name']
-    print entry['kind']
-    try:
-        entry['lineNumber']
-    except KeyError:
-        print "Entry has no lineNumber"
-    else:
-        print "Entry has a lineNumber"
+# The following TagEntry keys are always available:
+#  name - name of tag
+#  file - path of source file containing definition of tag
+#  pattern - pattern for locating source line
+#            (None if no pattern, this should no huppen with a correct
+#             tag file)
+#  fileScope - is tag of file-limited scope?
+#
+# Other keys will be assumed as an extensionkey and will raise a
+# KeyError if no such key is found.
+# Other keys include :
+#  lineNumber - line number in source file of tag definition
+#  kind - kind of tag
 
-    # TagEntry are Mapping. It is possible to loop for all the keys in the
-    # entry as it is done with a dict.
+print entry['name']
+print entry['kind']
+try:
+    entry['lineNumber']
+except KeyError:
+    print "Entry has no lineNumber"
+else:
+    print "Entry has a lineNumber"
 
-    for k, v in entry.items():
-        print k, "value is", v
+# TagEntry are Mapping. It is possible to loop for all the keys in the
+# entry as it is done with a dict.
+
+for k, v in entry.items():
+    print k, "value is", v
 ```
 
 **Finding a Tag Entry**
@@ -120,16 +124,27 @@ if status:
 # TAG_IGNORECASE - disable binary search
 # TAG_OBSERVECASE - case sensitive and allowed binary search to perform
 
-if tagFile.find(entry, 'find', ctags.TAG_PARTIALMATCH | ctags.TAG_IGNORECASE):
-    print 'found'
-    print entry['lineNumber']
-    print entry['pattern']
-    print entry['kind']
+try:
+    tagFile.find(entry, 'find', ctags.TAG_PARTIALMATCH | ctags.TAG_IGNORECASE)
+except:
+    print "Not found"
+    sys.exit(-1)
+
+print 'found'
+print entry['lineNumber']
+print entry['pattern']
+print entry['kind']
 
 # Find the next tag matching the name and options supplied to the 
 # most recent call to tagFile.find().  (replace the entry if found)
-status = tagFile.findNext(entry)
+try:
+    tagFile.findNext(entry)
+except:
+    ...
 
 # Step to the next tag in the file (replace entry if found)
-status = tagFile.next(entry)
+try:
+    tagFile.next(entry)
+except:
+    ...
 ```

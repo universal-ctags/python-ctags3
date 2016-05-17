@@ -17,6 +17,8 @@ You should have received a copy of the GNU General Public License
 along with Python-Ctags.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+cdef extern from "string.h":
+    char* strerror(int errnum)
 
 include "stdlib.pxi"
 include "readtags.pxi"
@@ -78,7 +80,11 @@ cdef class CTags:
     cdef tagFileInfo info
 
     def __cinit__(self, filepath):
-        self.open(filepath)
+        self.file = ctagsOpen(filepath, &self.info)
+        if not self.file:
+            raise OSError(self.info.status.error_number,
+                          strerror(self.info.status.error_number),
+                          filepath)
 
     def __dealloc__(self):
 
@@ -87,11 +93,7 @@ cdef class CTags:
 
     def __getitem__(self, key):
         ret = None
-        if key == 'opened':
-            return self.info.status.opened
-        elif key == 'error_number':
-            return self.info.status.error_number
-        elif key == 'format':
+        if key == 'format':
             return self.info.file.format
         elif key == 'sort':
             return self.info.file.sort
@@ -108,25 +110,28 @@ cdef class CTags:
                 raise KeyError(key)
             return ret
 
-
-    def open(self, filepath):
-        self.file = ctagsOpen(filepath, &self.info)
-
-        if not self.info.status.opened:
-            raise Exception('Invalid tag file')
-
     def setSortType(self, tagSortType type):
-        return ctagsSetSortType(self.file, type)
+        success = ctagsSetSortType(self.file, type)
+        if not success:
+            raise RuntimeError()
 
     def first(self, cTagEntry entry):
-        return ctagsFirst(self.file, &entry.c_entry)
+        success = ctagsFirst(self.file, &entry.c_entry)
+        if not success:
+            raise RuntimeError()
 
     def find(self, cTagEntry entry, char* name, int options):
-        return ctagsFind(self.file, &entry.c_entry, name, options)
+        success = ctagsFind(self.file, &entry.c_entry, name, option)
+        if not success:
+            raise RuntimeError()
 
     def findNext(self, cTagEntry entry):
-        return ctagsFindNext(self.file, &entry.c_entry)
+        success = ctagsFindNext(self.file, &entry.c_entry)
+        if not success:
+            raise RuntimeError()
 
     def next(self, cTagEntry entry):
-        return ctagsNext(self.file, &entry.c_entry)
+        success = ctagsNext(self.file, &entry.c_entry)
+        if not success:
+            raise RuntimeError()
 
