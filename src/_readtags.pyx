@@ -118,7 +118,7 @@ cdef class CTags:
             first = self.find(name, options)
             self.current_id = first
             yield first
-        except KeyError:
+        except RuntimeError:
             raise StopIteration from None
 
         while True:
@@ -143,7 +143,7 @@ cdef class CTags:
             first = self.first()
             self.current_id = first
             yield first
-        except KeyError:
+        except RuntimeError:
             raise StopIteration from None
 
         while True:
