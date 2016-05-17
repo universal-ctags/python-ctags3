@@ -42,3 +42,19 @@ class TestCTagsParse(TestCase):
                 [b'../readtags.c', b'find', b'/^static tagResult find (tagFile '
                 b'*const file, tagEntry *const entry,$/', b'function', b'C']
         )
+
+    def test_tag_find_partial_nocase(self):
+       for entry in self.ctags.find_tags(b'tag', ctags.TAG_PARTIALMATCH | ctags.TAG_IGNORECASE):
+           self.assertTrue(entry['name'].lower().startswith(b'tag'))
+
+    def test_tag_find_nocase(self):
+       for entry in self.ctags.find_tags(b'tag', ctags.TAG_IGNORECASE):
+           self.assertEqual(entry['name'].lower(), b'tag')
+
+    def test_tag_find_partial(self):
+       for entry in self.ctags.find_tags(b'tag', ctags.TAG_PARTIALMATCH):
+           self.assertTrue(entry['name'].startswith(b'tag'))
+
+    def test_tag_find_noflag(self):
+       for entry in self.ctags.find_tags(b'tag', 0):
+           self.assertEqual(entry['name'], b'tag')
