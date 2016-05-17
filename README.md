@@ -93,6 +93,12 @@ if status:
         print "Entry has no lineNumber"
     else:
         print "Entry has a lineNumber"
+
+    # TagEntry are Mapping. It is possible to loop for all the keys in the
+    # entry as it is done with a dict.
+
+    for k, v in entry.items():
+        print k, "value is", v
 ```
 
 **Finding a Tag Entry**

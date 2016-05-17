@@ -20,9 +20,9 @@ along with Python-Ctags.  If not, see <http://www.gnu.org/licenses/>.
 
 include "stdlib.pxi"
 include "readtags.pxi"
+from collections.abc import Mapping
 
-
-cdef class TagEntry:
+cdef class cTagEntry:
     cdef tagEntry c_entry
 
     def __getitem__(self, key):
@@ -52,6 +52,26 @@ cdef class TagEntry:
                 raise KeyError(key)
 
             return result
+
+    def __iter__(self):
+        yield from ('name', 'file', 'pattern', 'fileScope')
+        if self.c_entry.address.lineNumber:
+            yield 'lineNumber'
+        if self.c_entry.kind != NULL:
+            yield 'kind'
+        for index in range(self.c_entry.fields.count):
+            key = self.c_entry.fields.list[index].key
+            yield key.decode()
+
+    def __len__(self):
+        return (4   # Number of fields always present.
+              + bool(self.c_entry.address.lineNumber) # Do we have lineNumber ?
+              + bool(self.c_entry.kind != NULL) # Do we have kind ?
+              + self.c_entry.fields.count # Number of extra fields.
+               )
+
+class TagEntry(cTagEntry, Mapping):
+    pass
 
 cdef class CTags:
     cdef tagFile* file
@@ -101,15 +121,15 @@ cdef class CTags:
     def setSortType(self, tagSortType type):
         return ctagsSetSortType(self.file, type)
 
-    def first(self, TagEntry entry):
+    def first(self, cTagEntry entry):
         return ctagsFirst(self.file, &entry.c_entry)
 
-    def find(self, TagEntry entry, char* name, int options):
+    def find(self, cTagEntry entry, char* name, int options):
         return ctagsFind(self.file, &entry.c_entry, name, options)
 
-    def findNext(self, TagEntry entry):
+    def findNext(self, cTagEntry entry):
         return ctagsFindNext(self.file, &entry.c_entry)
 
-    def next(self, TagEntry entry):
+    def next(self, cTagEntry entry):
         return ctagsNext(self.file, &entry.c_entry)
 
