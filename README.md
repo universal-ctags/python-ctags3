@@ -41,7 +41,7 @@ import sys
 try:
     tagFile = CTags('tags')
 except OSError as err:
-    print err
+    print(err)
     sys.exit(1)
 
 # Available file information keys:
@@ -58,16 +58,16 @@ except OSError as err:
 # If one of them is not present a KeyError is raised.
 
 try:
-    print tagFile['name']
+    print(tagFile['name'])
 except KeyError:
-    print "No 'name' in the tagfile"
+    print("No 'name' in the tagfile")
 
 try:
-    print tagFile['author']
+    print(tagFile['author'])
 except KeyError:
-    print "No 'author' in the tagfile"
+    print("No 'author' in the tagfile")
 
-print tagFile['format']
+print(tagFile['format'])
 
 # Available sort type:
 #  TAG_UNSORTED, TAG_SORTED, TAG_FOLDSORTED
@@ -97,14 +97,14 @@ all_tags = tagFile.all_tags()
 #  kind - kind of tag
 
 for entry in all_tags:
-    print entry['name']
-    print entry['file']
+    print(entry['name'])
+    print(entry['file'])
     try:
         entry['lineNumber']
     except KeyError:
-        print "Entry has no lineNumber"
+        print("Entry has no lineNumber")
     else:
-        print "Entry has a lineNumber"
+        print("Entry has a lineNumber")
 ```
 
 **Finding Tag Entries**
@@ -117,22 +117,7 @@ for entry in all_tags:
 
 found_tags = tagFile.find_tags('find', ctags.TAG_PARTIALMATCH | ctags.TAG_IGNORECASE)
 for entry in found_tags:
-    print entry['lineNumber']
-    print entry['pattern']
-    print entry['kind']
+    print(entry['lineNumber'])
+    print(entry['pattern'])
+    print(entry['kind'])
 
-# Find the next tag matching the name and options supplied to the 
-# most recent call to tagFile.find().
-# Raise if no entry is found.
-try:
-    entry = tagFile.findNext()
-except:
-    ...
-
-# Step to the next tag in the file.
-# Raise if no entry is found.
-try:
-    entry = tagFile.next()
-except:
-    ...
-```
