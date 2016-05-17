@@ -7,10 +7,20 @@ sys.path.insert(0, src_dir)
 from unittest import TestCase
 import ctags
 
+class TestCTagsOpen(TestCase):
+    def setUp(self):
+        self.file_path = os.path.join(src_dir, 'examples', 'tags')
+
+    def test_open_str(self):
+        ctags.CTags(self.file_path)
+
+    def test_open_bytes(self):
+        ctags.CTags(self.file_path.encode(sys.getfilesystemencoding()))
+
 class TestCTagsParse(TestCase):
     def setUp(self):
         file_path = os.path.join(src_dir, 'examples', 'tags')
-        self.ctags = ctags.CTags(file_path.encode(sys.getfilesystemencoding()))
+        self.ctags = ctags.CTags(file_path)
     def test_tag_entry(self):
         self.ctags.setSortType(ctags.TAG_SORTED)
         entry = next(self.ctags.all_tags())

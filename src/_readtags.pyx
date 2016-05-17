@@ -22,6 +22,7 @@ cdef extern from "string.h":
 
 include "stdlib.pxi"
 include "readtags.pxi"
+import sys
 
 cdef create_tagEntry(const tagEntry* const c_entry):
     cdef dict ret = {}
@@ -46,6 +47,8 @@ cdef class CTags:
     cdef object current_id
 
     def __cinit__(self, filepath):
+        if isinstance(filepath, unicode):
+            filepath = (<unicode>filepath).encode(sys.getfilesystemencoding())
         self.file = ctagsOpen(filepath, &self.info)
         if not self.file:
             raise OSError(self.info.status.error_number,
