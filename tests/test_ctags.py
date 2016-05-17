@@ -12,22 +12,20 @@ class TestCTagsParse(TestCase):
         file_path = os.path.join(src_dir, 'examples', 'tags')
         self.ctags = ctags.CTags(file_path.encode(sys.getfilesystemencoding()))
     def test_tag_entry(self):
-        entry = ctags.TagEntry()
         self.ctags.setSortType(ctags.TAG_SORTED)
-        self.ctags.first(entry)
+        entry = next(self.ctags.all_tags())
         entry_info = [entry[_]
-                for _ in ('file', 'name', 'pattern', 'kind', b'language')
+                for _ in ('file', 'name', 'pattern', 'kind', 'language')
         ]
         self.assertEqual(
                 entry_info,
                 [b'../_readtags.c', b'DL_EXPORT', b'10', b'macro', b'C']
         )
     def test_tag_find(self):
-        entry = ctags.TagEntry()
         self.ctags.setSortType(ctags.TAG_SORTED)
-        self.ctags.find(entry, b'find', ctags.TAG_PARTIALMATCH | ctags.TAG_IGNORECASE)
+        entry = next(self.ctags.find_tags(b'find', ctags.TAG_PARTIALMATCH | ctags.TAG_IGNORECASE))
         entry_info = [entry[_]
-                for _ in ('file', 'name', 'pattern', 'kind', b'language')
+                for _ in ('file', 'name', 'pattern', 'kind', 'language')
         ]
         self.assertEqual(
                 entry_info,
