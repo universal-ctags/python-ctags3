@@ -32,7 +32,7 @@ cdef class CTags:
     cdef tagEntry c_entry
     cdef object current_id
     cdef object encoding
-    cdef unicode encoding_errors
+    cdef str encoding_errors
 
     def __cinit__(self, filepath, encoding='utf8', encoding_errors='strict'):
         if isinstance(filepath, unicode):
