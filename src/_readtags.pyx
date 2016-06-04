@@ -24,29 +24,17 @@ include "stdlib.pxi"
 include "readtags.pxi"
 import sys
 
-cdef create_tagEntry(const tagEntry* const c_entry):
-    cdef dict ret = {}
-    ret['name'] = c_entry.name
-    ret['file'] = c_entry.file
-    ret['fileScope'] = c_entry.fileScope
-    if c_entry.address.pattern != NULL:
-        ret['pattern'] = c_entry.address.pattern
-    if c_entry.address.lineNumber:
-        ret['lineNumber'] = c_entry.address.lineNumber
-    if c_entry.kind != NULL:
-        ret['kind'] = c_entry.kind
-    for index in range(c_entry.fields.count):
-        key = c_entry.fields.list[index].key
-        ret[key.decode()] = c_entry.fields.list[index].value
-    return ret
+
 
 cdef class CTags:
     cdef tagFile* file
     cdef tagFileInfo info
     cdef tagEntry c_entry
     cdef object current_id
+    cdef object encoding
+    cdef unicode encoding_errors
 
-    def __cinit__(self, filepath):
+    def __cinit__(self, filepath, encoding='utf8', encoding_errors='strict'):
         if isinstance(filepath, unicode):
             filepath = (<unicode>filepath).encode(sys.getfilesystemencoding())
         self.file = ctagsOpen(filepath, &self.info)
@@ -54,6 +42,13 @@ cdef class CTags:
             raise OSError(self.info.status.error_number,
                           strerror(self.info.status.error_number),
                           filepath)
+        self.encoding = encoding
+        self.encoding_errors = encoding_errors
+
+    cdef decode(self, bytes bytes_array):
+        if not self.encoding:
+            return bytes_array
+        return bytes_array.decode(self.encoding, self.encoding_errors)
 
     def __dealloc__(self):
         if self.file:
@@ -76,38 +71,54 @@ cdef class CTags:
                 ret = self.info.program.version
             if ret is None:
                 raise KeyError(key)
-            return ret
+            return self.decode(ret)
 
     def setSortType(self, tagSortType type):
         success = ctagsSetSortType(self.file, type)
         if not success:
             raise RuntimeError()
 
+    cdef create_tagEntry(self, const tagEntry* const c_entry):
+        cdef dict ret = {}
+        ret['name'] = self.decode(c_entry.name)
+        ret['file'] = self.decode(c_entry.file)
+        ret['fileScope'] = c_entry.fileScope
+        if c_entry.address.pattern != NULL:
+            ret['pattern'] = self.decode(c_entry.address.pattern)
+        if c_entry.address.lineNumber:
+            ret['lineNumber'] = c_entry.address.lineNumber
+        if c_entry.kind != NULL:
+            ret['kind'] = self.decode(c_entry.kind)
+        for index in range(c_entry.fields.count):
+            key = c_entry.fields.list[index].key
+            ret[key.decode()] = self.decode(c_entry.fields.list[index].value)
+        return ret
+
     cdef first(self):
         success = ctagsFirst(self.file, &self.c_entry)
         if not success:
             raise RuntimeError()
-        return create_tagEntry(&self.c_entry)
+        return self.create_tagEntry(&self.c_entry)
 
     cdef find(self, bytes name, int options):
         success = ctagsFind(self.file, &self.c_entry, name, options)
         if not success:
             raise RuntimeError()
-        return create_tagEntry(&self.c_entry)
+        return self.create_tagEntry(&self.c_entry)
 
     cdef findNext(self):
         success = ctagsFindNext(self.file, &self.c_entry)
         if not success:
             raise RuntimeError()
-        return create_tagEntry(&self.c_entry)
+        return self.create_tagEntry(&self.c_entry)
 
     cdef next(self):
         success = ctagsNext(self.file, &self.c_entry)
         if not success:
             raise RuntimeError()
-        return create_tagEntry(&self.c_entry)
+        return self.create_tagEntry(&self.c_entry)
 
-    def find_tags(self, bytes name, int options):
+    def find_tags(self, name, int options):
         """ Find tags corresponding to name in the tag file.
             @name : a bytes array to search to.
             @options : A option flags for the search.
@@ -115,8 +126,13 @@ cdef class CTags:
 
             WARNING: Only one iterator can run on a tag file.
             If you use another iterator (by calling all_tags or find_tags),
-            any previous iterator will be invalidate and raise a RuntimeError.
+            any previous iterator will be invalidated and raise a RuntimeError.
         """
+        if isinstance(name, unicode):
+            if self.encoding is None:
+                raise ValueError("%r is a unicode string and you do not provide"
+                                 "a encoding"%name)
+            name = (<unicode>name).encode(self.encoding)
         try:
             first = self.find(name, options)
             self.current_id = first
@@ -140,7 +156,7 @@ cdef class CTags:
 
             WARNING: Only one iterator can run on a tag file.
             If you use another iterator (by calling all_tags or find_tags),
-            any previous iterator will be invalidate and raise a RuntimeError.
+            any previous iterator will be invalidated and raise a RuntimeError.
         """
         try:
             first = self.first()

@@ -121,3 +121,20 @@ for entry in found_tags:
     print(entry['pattern'])
     print(entry['kind'])
 
+
+# File Encoding.
+
+By default, CTags return unicode strings using the 'utf8' encoding.
+This can be changed by providing a custom encoding at CTags creation :
+
+```python
+tagFile = CTags('tags', encoding='latin1')
+```
+
+If None is provided as encoding, no encoding is done and entries will contain
+bytes instead of string.
+
+This is also possible to provide a encoding_errors.
+It will be passed to the encode function as the 'errors' argument.
+See the definition of the encode function to know how to use this argument.
+By default, encoding_errors is 'strict'.
