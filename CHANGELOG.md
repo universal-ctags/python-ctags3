@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 1.2.4
+- Bug fixes (Masatake Yamato)
+
 ## Version 1.2.3
 - Include examples in distribution (Louis Sautier)
 
