@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 1.3.0
+- Python 3.7 support (Louis Sautier)
+
 ## Version 1.2.4
 - Bug fixes (Masatake Yamato)
 
