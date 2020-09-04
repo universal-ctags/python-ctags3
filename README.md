@@ -8,7 +8,7 @@ This project wrote a wrapper for read tags library.  I have been using the packa
 
 ## Requirements
  * C compiler (gcc/msvc)
- * Python version >= 2.6
+ * Python version >= 2.7
  * Ctags implementation like [http://prdownloads.sourceforge.net/ctags/ctags-5.7.tar.gz Exuberant Ctags] or [https://github.com/universal-ctags/ctags Universal Ctags] (need it to generate tags file).
 
 ## Installation
