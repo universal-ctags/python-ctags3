@@ -89,7 +89,7 @@ cdef class CTags:
     cdef tagFileInfo info
 
     def __cinit__(self, filepath):
-        self.open(filepath)
+        self.open(filepath.encode())
 
     def __dealloc__(self):
 
