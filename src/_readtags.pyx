@@ -89,7 +89,7 @@ cdef class CTags:
     cdef tagFileInfo info
 
     def __cinit__(self, filepath):
-        self.open(filepath.encode())
+        self.open(filepath)
 
     def __dealloc__(self):
 
@@ -124,7 +124,11 @@ cdef class CTags:
 
 
     def open(self, filepath):
-        self.file = ctagsOpen(filepath, &self.info)
+        if type(filepath) is str:
+            self.file = ctagsOpen(filepath.encode(), &self.info)
+        else:
+            self.file = ctagsOpen(filepath, &self.info)
+            
 
         if not self.info.status.opened:
             raise Exception('Invalid tag file')
