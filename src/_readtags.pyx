@@ -21,7 +21,6 @@ import sys
 include "stdlib.pxi"
 include "readtags.pxi"
 
-
 cdef class TagEntry:
     cdef tagEntry c_entry
 
@@ -29,24 +28,23 @@ cdef class TagEntry:
         self.c_entry.fields.count = 0
         self.c_entry.fields.list = NULL
 
-
     def __setitem__(self, key, item):
-        if key == 'name':
-            self.c_entry.name = item 
-        elif key == 'file':
+        if key == "name":
+            self.c_entry.name = item
+        elif key == "file":
             self.c_entry.file = item
-        elif key == 'pattern':
+        elif key == "pattern":
             self.c_entry.address.pattern = item
-        elif key == 'lineNumber':
+        elif key == "lineNumber":
             self.c_entry.address.lineNumber = item
-        elif key == 'kind':
+        elif key == "kind":
             self.c_entry.kind = item
-        elif key == 'fileScope':
+        elif key == "fileScope":
             self.c_entry.fileScope = item
-        elif key == 'fields':
+        elif key == "fields":
             # fields.list is allocated by readtags.c
             if self.c_entry.fields.count != len(item):
-                return 
+                return
 
             fields = item
             if self.c_entry.fields.list != NULL:
@@ -59,22 +57,22 @@ cdef class TagEntry:
 
     def __getitem__(self, key):
         cdef char* result
-        if key == 'name':
+        if key == "name":
             return self.c_entry.name
-        elif key == 'file':
-            return self.c_entry.file 
-        elif key == 'pattern':
+        elif key == "file":
+            return self.c_entry.file
+        elif key == "pattern":
             if self.c_entry.address.pattern == NULL:
                 return None
-            return self.c_entry.address.pattern 
-        elif key == 'lineNumber':
-            return self.c_entry.address.lineNumber 
-        elif key == 'kind':
+            return self.c_entry.address.pattern
+        elif key == "lineNumber":
+            return self.c_entry.address.lineNumber
+        elif key == "kind":
             if self.c_entry.kind == NULL:
                 return None
             return self.c_entry.kind
-        elif key == 'fileScope':
-            return self.c_entry.fileScope 
+        elif key == "fileScope":
+            return self.c_entry.fileScope
         else:
             # It will crash if we mix NULL/0/None
             # don't mix comparison of type
@@ -83,6 +81,7 @@ cdef class TagEntry:
                 return None
 
             return result
+
 
 cdef class CTags:
     cdef tagFile* file
@@ -97,31 +96,30 @@ cdef class CTags:
             ctagsClose(self.file)
 
     def __getitem__(self, key):
-        if key == 'opened':
+        if key == "opened":
             return self.info.status.opened
-        if key == 'error_number':
+        if key == "error_number":
             return self.info.status.error_number
-        if key == 'format':
+        if key == "format":
             return self.info.file.format
-        if key == 'sort':
+        if key == "sort":
             return self.info.file.sort
-        if key == 'author':
+        if key == "author":
             if self.info.program.author == NULL:
-                return ''
+                return ""
             return self.info.program.author
-        if key == 'name':
+        if key == "name":
             if self.info.program.name == NULL:
-                return ''
+                return ""
             return self.info.program.name
-        if key == 'url':
+        if key == "url":
             if self.info.program.url == NULL:
-                return ''
+                return ""
             return self.info.program.url
-        if key == 'version':
+        if key == "version":
             if self.info.program.version == NULL:
-                return ''
+                return ""
             return self.info.program.version
-
 
     def open(self, filepath):
         if isinstance(filepath, str):
@@ -130,7 +128,7 @@ cdef class CTags:
         self.file = ctagsOpen(filepath, &self.info)
 
         if not self.info.status.opened:
-            raise Exception('Invalid tag file')
+            raise Exception("Invalid tag file")
 
     def setSortType(self, tagSortType type):
         return ctagsSetSortType(self.file, type)
@@ -146,4 +144,3 @@ cdef class CTags:
 
     def next(self, TagEntry entry):
         return ctagsNext(self.file, &entry.c_entry)
-

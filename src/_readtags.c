@@ -832,8 +832,8 @@ struct __pyx_obj_9_readtags_CTags;
  */
 typedef void (*__pyx_t_9_readtags_signal_handler)(int);
 
-/* "_readtags.pyx":25
- * 
+/* "_readtags.pyx":24
+ * include "readtags.pxi"
  * 
  * cdef class TagEntry:             # <<<<<<<<<<<<<<
  *     cdef tagEntry c_entry
@@ -845,8 +845,8 @@ struct __pyx_obj_9_readtags_TagEntry {
 };
 
 
-/* "_readtags.pyx":87
- *             return result
+/* "_readtags.pyx":86
+ * 
  * 
  * cdef class CTags:             # <<<<<<<<<<<<<<
  *     cdef tagFile* file
@@ -1376,7 +1376,7 @@ static PyObject *__pyx_tuple__5;
 static PyObject *__pyx_tuple__6;
 /* Late includes */
 
-/* "_readtags.pyx":28
+/* "_readtags.pyx":27
  *     cdef tagEntry c_entry
  * 
  *     def __cinit__(self):             # <<<<<<<<<<<<<<
@@ -1405,7 +1405,7 @@ static int __pyx_pf_9_readtags_8TagEntry___cinit__(struct __pyx_obj_9_readtags_T
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__cinit__", 0);
 
-  /* "_readtags.pyx":29
+  /* "_readtags.pyx":28
  * 
  *     def __cinit__(self):
  *         self.c_entry.fields.count = 0             # <<<<<<<<<<<<<<
@@ -1414,16 +1414,16 @@ static int __pyx_pf_9_readtags_8TagEntry___cinit__(struct __pyx_obj_9_readtags_T
  */
   __pyx_v_self->c_entry.fields.count = 0;
 
-  /* "_readtags.pyx":30
+  /* "_readtags.pyx":29
  *     def __cinit__(self):
  *         self.c_entry.fields.count = 0
  *         self.c_entry.fields.list = NULL             # <<<<<<<<<<<<<<
  * 
- * 
+ *     def __setitem__(self, key, item):
  */
   __pyx_v_self->c_entry.fields.list = NULL;
 
-  /* "_readtags.pyx":28
+  /* "_readtags.pyx":27
  *     cdef tagEntry c_entry
  * 
  *     def __cinit__(self):             # <<<<<<<<<<<<<<
@@ -1437,11 +1437,11 @@ static int __pyx_pf_9_readtags_8TagEntry___cinit__(struct __pyx_obj_9_readtags_T
   return __pyx_r;
 }
 
-/* "_readtags.pyx":33
- * 
+/* "_readtags.pyx":31
+ *         self.c_entry.fields.list = NULL
  * 
  *     def __setitem__(self, key, item):             # <<<<<<<<<<<<<<
- *         if key == 'name':
+ *         if key == "name":
  *             self.c_entry.name = item
  */
 
@@ -1480,208 +1480,208 @@ static int __pyx_pf_9_readtags_8TagEntry_2__setitem__(struct __pyx_obj_9_readtag
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__setitem__", 0);
 
-  /* "_readtags.pyx":34
+  /* "_readtags.pyx":32
  * 
  *     def __setitem__(self, key, item):
- *         if key == 'name':             # <<<<<<<<<<<<<<
+ *         if key == "name":             # <<<<<<<<<<<<<<
  *             self.c_entry.name = item
- *         elif key == 'file':
+ *         elif key == "file":
  */
-  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_name, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 34, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_name, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 32, __pyx_L1_error)
+  if (__pyx_t_1) {
+
+    /* "_readtags.pyx":33
+ *     def __setitem__(self, key, item):
+ *         if key == "name":
+ *             self.c_entry.name = item             # <<<<<<<<<<<<<<
+ *         elif key == "file":
+ *             self.c_entry.file = item
+ */
+    __pyx_t_2 = __Pyx_PyObject_AsWritableString(__pyx_v_item); if (unlikely((!__pyx_t_2) && PyErr_Occurred())) __PYX_ERR(1, 33, __pyx_L1_error)
+    __pyx_v_self->c_entry.name = __pyx_t_2;
+
+    /* "_readtags.pyx":32
+ * 
+ *     def __setitem__(self, key, item):
+ *         if key == "name":             # <<<<<<<<<<<<<<
+ *             self.c_entry.name = item
+ *         elif key == "file":
+ */
+    goto __pyx_L3;
+  }
+
+  /* "_readtags.pyx":34
+ *         if key == "name":
+ *             self.c_entry.name = item
+ *         elif key == "file":             # <<<<<<<<<<<<<<
+ *             self.c_entry.file = item
+ *         elif key == "pattern":
+ */
+  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_file, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 34, __pyx_L1_error)
   if (__pyx_t_1) {
 
     /* "_readtags.pyx":35
- *     def __setitem__(self, key, item):
- *         if key == 'name':
- *             self.c_entry.name = item             # <<<<<<<<<<<<<<
- *         elif key == 'file':
- *             self.c_entry.file = item
+ *             self.c_entry.name = item
+ *         elif key == "file":
+ *             self.c_entry.file = item             # <<<<<<<<<<<<<<
+ *         elif key == "pattern":
+ *             self.c_entry.address.pattern = item
  */
     __pyx_t_2 = __Pyx_PyObject_AsWritableString(__pyx_v_item); if (unlikely((!__pyx_t_2) && PyErr_Occurred())) __PYX_ERR(1, 35, __pyx_L1_error)
-    __pyx_v_self->c_entry.name = __pyx_t_2;
+    __pyx_v_self->c_entry.file = __pyx_t_2;
 
     /* "_readtags.pyx":34
- * 
- *     def __setitem__(self, key, item):
- *         if key == 'name':             # <<<<<<<<<<<<<<
+ *         if key == "name":
  *             self.c_entry.name = item
- *         elif key == 'file':
+ *         elif key == "file":             # <<<<<<<<<<<<<<
+ *             self.c_entry.file = item
+ *         elif key == "pattern":
  */
     goto __pyx_L3;
   }
 
   /* "_readtags.pyx":36
- *         if key == 'name':
- *             self.c_entry.name = item
- *         elif key == 'file':             # <<<<<<<<<<<<<<
+ *         elif key == "file":
  *             self.c_entry.file = item
- *         elif key == 'pattern':
+ *         elif key == "pattern":             # <<<<<<<<<<<<<<
+ *             self.c_entry.address.pattern = item
+ *         elif key == "lineNumber":
  */
-  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_file, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 36, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_pattern, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 36, __pyx_L1_error)
   if (__pyx_t_1) {
 
     /* "_readtags.pyx":37
- *             self.c_entry.name = item
- *         elif key == 'file':
- *             self.c_entry.file = item             # <<<<<<<<<<<<<<
- *         elif key == 'pattern':
- *             self.c_entry.address.pattern = item
+ *             self.c_entry.file = item
+ *         elif key == "pattern":
+ *             self.c_entry.address.pattern = item             # <<<<<<<<<<<<<<
+ *         elif key == "lineNumber":
+ *             self.c_entry.address.lineNumber = item
  */
     __pyx_t_2 = __Pyx_PyObject_AsWritableString(__pyx_v_item); if (unlikely((!__pyx_t_2) && PyErr_Occurred())) __PYX_ERR(1, 37, __pyx_L1_error)
-    __pyx_v_self->c_entry.file = __pyx_t_2;
+    __pyx_v_self->c_entry.address.pattern = __pyx_t_2;
 
     /* "_readtags.pyx":36
- *         if key == 'name':
- *             self.c_entry.name = item
- *         elif key == 'file':             # <<<<<<<<<<<<<<
+ *         elif key == "file":
  *             self.c_entry.file = item
- *         elif key == 'pattern':
+ *         elif key == "pattern":             # <<<<<<<<<<<<<<
+ *             self.c_entry.address.pattern = item
+ *         elif key == "lineNumber":
  */
     goto __pyx_L3;
   }
 
   /* "_readtags.pyx":38
- *         elif key == 'file':
- *             self.c_entry.file = item
- *         elif key == 'pattern':             # <<<<<<<<<<<<<<
+ *         elif key == "pattern":
  *             self.c_entry.address.pattern = item
- *         elif key == 'lineNumber':
+ *         elif key == "lineNumber":             # <<<<<<<<<<<<<<
+ *             self.c_entry.address.lineNumber = item
+ *         elif key == "kind":
  */
-  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_pattern, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 38, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_lineNumber, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 38, __pyx_L1_error)
   if (__pyx_t_1) {
 
     /* "_readtags.pyx":39
- *             self.c_entry.file = item
- *         elif key == 'pattern':
- *             self.c_entry.address.pattern = item             # <<<<<<<<<<<<<<
- *         elif key == 'lineNumber':
- *             self.c_entry.address.lineNumber = item
+ *             self.c_entry.address.pattern = item
+ *         elif key == "lineNumber":
+ *             self.c_entry.address.lineNumber = item             # <<<<<<<<<<<<<<
+ *         elif key == "kind":
+ *             self.c_entry.kind = item
  */
-    __pyx_t_2 = __Pyx_PyObject_AsWritableString(__pyx_v_item); if (unlikely((!__pyx_t_2) && PyErr_Occurred())) __PYX_ERR(1, 39, __pyx_L1_error)
-    __pyx_v_self->c_entry.address.pattern = __pyx_t_2;
+    __pyx_t_3 = __Pyx_PyInt_As_unsigned_long(__pyx_v_item); if (unlikely((__pyx_t_3 == (unsigned long)-1) && PyErr_Occurred())) __PYX_ERR(1, 39, __pyx_L1_error)
+    __pyx_v_self->c_entry.address.lineNumber = __pyx_t_3;
 
     /* "_readtags.pyx":38
- *         elif key == 'file':
- *             self.c_entry.file = item
- *         elif key == 'pattern':             # <<<<<<<<<<<<<<
+ *         elif key == "pattern":
  *             self.c_entry.address.pattern = item
- *         elif key == 'lineNumber':
+ *         elif key == "lineNumber":             # <<<<<<<<<<<<<<
+ *             self.c_entry.address.lineNumber = item
+ *         elif key == "kind":
  */
     goto __pyx_L3;
   }
 
   /* "_readtags.pyx":40
- *         elif key == 'pattern':
- *             self.c_entry.address.pattern = item
- *         elif key == 'lineNumber':             # <<<<<<<<<<<<<<
+ *         elif key == "lineNumber":
  *             self.c_entry.address.lineNumber = item
- *         elif key == 'kind':
+ *         elif key == "kind":             # <<<<<<<<<<<<<<
+ *             self.c_entry.kind = item
+ *         elif key == "fileScope":
  */
-  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_lineNumber, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 40, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_kind, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 40, __pyx_L1_error)
   if (__pyx_t_1) {
 
     /* "_readtags.pyx":41
- *             self.c_entry.address.pattern = item
- *         elif key == 'lineNumber':
- *             self.c_entry.address.lineNumber = item             # <<<<<<<<<<<<<<
- *         elif key == 'kind':
- *             self.c_entry.kind = item
+ *             self.c_entry.address.lineNumber = item
+ *         elif key == "kind":
+ *             self.c_entry.kind = item             # <<<<<<<<<<<<<<
+ *         elif key == "fileScope":
+ *             self.c_entry.fileScope = item
  */
-    __pyx_t_3 = __Pyx_PyInt_As_unsigned_long(__pyx_v_item); if (unlikely((__pyx_t_3 == (unsigned long)-1) && PyErr_Occurred())) __PYX_ERR(1, 41, __pyx_L1_error)
-    __pyx_v_self->c_entry.address.lineNumber = __pyx_t_3;
+    __pyx_t_2 = __Pyx_PyObject_AsWritableString(__pyx_v_item); if (unlikely((!__pyx_t_2) && PyErr_Occurred())) __PYX_ERR(1, 41, __pyx_L1_error)
+    __pyx_v_self->c_entry.kind = __pyx_t_2;
 
     /* "_readtags.pyx":40
- *         elif key == 'pattern':
- *             self.c_entry.address.pattern = item
- *         elif key == 'lineNumber':             # <<<<<<<<<<<<<<
+ *         elif key == "lineNumber":
  *             self.c_entry.address.lineNumber = item
- *         elif key == 'kind':
+ *         elif key == "kind":             # <<<<<<<<<<<<<<
+ *             self.c_entry.kind = item
+ *         elif key == "fileScope":
  */
     goto __pyx_L3;
   }
 
   /* "_readtags.pyx":42
- *         elif key == 'lineNumber':
- *             self.c_entry.address.lineNumber = item
- *         elif key == 'kind':             # <<<<<<<<<<<<<<
+ *         elif key == "kind":
  *             self.c_entry.kind = item
- *         elif key == 'fileScope':
+ *         elif key == "fileScope":             # <<<<<<<<<<<<<<
+ *             self.c_entry.fileScope = item
+ *         elif key == "fields":
  */
-  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_kind, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 42, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_fileScope, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 42, __pyx_L1_error)
   if (__pyx_t_1) {
 
     /* "_readtags.pyx":43
- *             self.c_entry.address.lineNumber = item
- *         elif key == 'kind':
- *             self.c_entry.kind = item             # <<<<<<<<<<<<<<
- *         elif key == 'fileScope':
- *             self.c_entry.fileScope = item
+ *             self.c_entry.kind = item
+ *         elif key == "fileScope":
+ *             self.c_entry.fileScope = item             # <<<<<<<<<<<<<<
+ *         elif key == "fields":
+ *             # fields.list is allocated by readtags.c
  */
-    __pyx_t_2 = __Pyx_PyObject_AsWritableString(__pyx_v_item); if (unlikely((!__pyx_t_2) && PyErr_Occurred())) __PYX_ERR(1, 43, __pyx_L1_error)
-    __pyx_v_self->c_entry.kind = __pyx_t_2;
+    __pyx_t_4 = __Pyx_PyInt_As_short(__pyx_v_item); if (unlikely((__pyx_t_4 == (short)-1) && PyErr_Occurred())) __PYX_ERR(1, 43, __pyx_L1_error)
+    __pyx_v_self->c_entry.fileScope = __pyx_t_4;
 
     /* "_readtags.pyx":42
- *         elif key == 'lineNumber':
- *             self.c_entry.address.lineNumber = item
- *         elif key == 'kind':             # <<<<<<<<<<<<<<
+ *         elif key == "kind":
  *             self.c_entry.kind = item
- *         elif key == 'fileScope':
+ *         elif key == "fileScope":             # <<<<<<<<<<<<<<
+ *             self.c_entry.fileScope = item
+ *         elif key == "fields":
  */
     goto __pyx_L3;
   }
 
   /* "_readtags.pyx":44
- *         elif key == 'kind':
- *             self.c_entry.kind = item
- *         elif key == 'fileScope':             # <<<<<<<<<<<<<<
+ *         elif key == "fileScope":
  *             self.c_entry.fileScope = item
- *         elif key == 'fields':
- */
-  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_fileScope, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 44, __pyx_L1_error)
-  if (__pyx_t_1) {
-
-    /* "_readtags.pyx":45
- *             self.c_entry.kind = item
- *         elif key == 'fileScope':
- *             self.c_entry.fileScope = item             # <<<<<<<<<<<<<<
- *         elif key == 'fields':
- *             # fields.list is allocated by readtags.c
- */
-    __pyx_t_4 = __Pyx_PyInt_As_short(__pyx_v_item); if (unlikely((__pyx_t_4 == (short)-1) && PyErr_Occurred())) __PYX_ERR(1, 45, __pyx_L1_error)
-    __pyx_v_self->c_entry.fileScope = __pyx_t_4;
-
-    /* "_readtags.pyx":44
- *         elif key == 'kind':
- *             self.c_entry.kind = item
- *         elif key == 'fileScope':             # <<<<<<<<<<<<<<
- *             self.c_entry.fileScope = item
- *         elif key == 'fields':
- */
-    goto __pyx_L3;
-  }
-
-  /* "_readtags.pyx":46
- *         elif key == 'fileScope':
- *             self.c_entry.fileScope = item
- *         elif key == 'fields':             # <<<<<<<<<<<<<<
+ *         elif key == "fields":             # <<<<<<<<<<<<<<
  *             # fields.list is allocated by readtags.c
  *             if self.c_entry.fields.count != len(item):
  */
-  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_fields, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 46, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_fields, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 44, __pyx_L1_error)
   if (__pyx_t_1) {
 
-    /* "_readtags.pyx":48
- *         elif key == 'fields':
+    /* "_readtags.pyx":46
+ *         elif key == "fields":
  *             # fields.list is allocated by readtags.c
  *             if self.c_entry.fields.count != len(item):             # <<<<<<<<<<<<<<
  *                 return
  * 
  */
-    __pyx_t_5 = PyObject_Length(__pyx_v_item); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(1, 48, __pyx_L1_error)
+    __pyx_t_5 = PyObject_Length(__pyx_v_item); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(1, 46, __pyx_L1_error)
     __pyx_t_1 = ((__pyx_v_self->c_entry.fields.count != __pyx_t_5) != 0);
     if (__pyx_t_1) {
 
-      /* "_readtags.pyx":49
+      /* "_readtags.pyx":47
  *             # fields.list is allocated by readtags.c
  *             if self.c_entry.fields.count != len(item):
  *                 return             # <<<<<<<<<<<<<<
@@ -1691,8 +1691,8 @@ static int __pyx_pf_9_readtags_8TagEntry_2__setitem__(struct __pyx_obj_9_readtag
       __pyx_r = 0;
       goto __pyx_L0;
 
-      /* "_readtags.pyx":48
- *         elif key == 'fields':
+      /* "_readtags.pyx":46
+ *         elif key == "fields":
  *             # fields.list is allocated by readtags.c
  *             if self.c_entry.fields.count != len(item):             # <<<<<<<<<<<<<<
  *                 return
@@ -1700,7 +1700,7 @@ static int __pyx_pf_9_readtags_8TagEntry_2__setitem__(struct __pyx_obj_9_readtag
  */
     }
 
-    /* "_readtags.pyx":51
+    /* "_readtags.pyx":49
  *                 return
  * 
  *             fields = item             # <<<<<<<<<<<<<<
@@ -1710,7 +1710,7 @@ static int __pyx_pf_9_readtags_8TagEntry_2__setitem__(struct __pyx_obj_9_readtag
     __Pyx_INCREF(__pyx_v_item);
     __pyx_v_fields = __pyx_v_item;
 
-    /* "_readtags.pyx":52
+    /* "_readtags.pyx":50
  * 
  *             fields = item
  *             if self.c_entry.fields.list != NULL:             # <<<<<<<<<<<<<<
@@ -1720,7 +1720,7 @@ static int __pyx_pf_9_readtags_8TagEntry_2__setitem__(struct __pyx_obj_9_readtag
     __pyx_t_1 = ((__pyx_v_self->c_entry.fields.list != NULL) != 0);
     if (__pyx_t_1) {
 
-      /* "_readtags.pyx":53
+      /* "_readtags.pyx":51
  *             fields = item
  *             if self.c_entry.fields.list != NULL:
  *                 free(self.c_entry.fields.list)             # <<<<<<<<<<<<<<
@@ -1729,7 +1729,7 @@ static int __pyx_pf_9_readtags_8TagEntry_2__setitem__(struct __pyx_obj_9_readtag
  */
       free(__pyx_v_self->c_entry.fields.list);
 
-      /* "_readtags.pyx":54
+      /* "_readtags.pyx":52
  *             if self.c_entry.fields.list != NULL:
  *                 free(self.c_entry.fields.list)
  *                 self.c_entry.fields.list = NULL             # <<<<<<<<<<<<<<
@@ -1738,7 +1738,7 @@ static int __pyx_pf_9_readtags_8TagEntry_2__setitem__(struct __pyx_obj_9_readtag
  */
       __pyx_v_self->c_entry.fields.list = NULL;
 
-      /* "_readtags.pyx":52
+      /* "_readtags.pyx":50
  * 
  *             fields = item
  *             if self.c_entry.fields.list != NULL:             # <<<<<<<<<<<<<<
@@ -1747,7 +1747,7 @@ static int __pyx_pf_9_readtags_8TagEntry_2__setitem__(struct __pyx_obj_9_readtag
  */
     }
 
-    /* "_readtags.pyx":56
+    /* "_readtags.pyx":54
  *                 self.c_entry.fields.list = NULL
  * 
  *             for k, v in fields.iteritems():             # <<<<<<<<<<<<<<
@@ -1757,9 +1757,9 @@ static int __pyx_pf_9_readtags_8TagEntry_2__setitem__(struct __pyx_obj_9_readtag
     __pyx_t_5 = 0;
     if (unlikely(__pyx_v_fields == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "iteritems");
-      __PYX_ERR(1, 56, __pyx_L1_error)
+      __PYX_ERR(1, 54, __pyx_L1_error)
     }
-    __pyx_t_9 = __Pyx_dict_iterator(__pyx_v_fields, 0, __pyx_n_s_iteritems, (&__pyx_t_7), (&__pyx_t_8)); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 56, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_dict_iterator(__pyx_v_fields, 0, __pyx_n_s_iteritems, (&__pyx_t_7), (&__pyx_t_8)); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 54, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
     __Pyx_XDECREF(__pyx_t_6);
     __pyx_t_6 = __pyx_t_9;
@@ -1767,7 +1767,7 @@ static int __pyx_pf_9_readtags_8TagEntry_2__setitem__(struct __pyx_obj_9_readtag
     while (1) {
       __pyx_t_11 = __Pyx_dict_iter_next(__pyx_t_6, __pyx_t_7, &__pyx_t_5, &__pyx_t_9, &__pyx_t_10, NULL, __pyx_t_8);
       if (unlikely(__pyx_t_11 == 0)) break;
-      if (unlikely(__pyx_t_11 == -1)) __PYX_ERR(1, 56, __pyx_L1_error)
+      if (unlikely(__pyx_t_11 == -1)) __PYX_ERR(1, 54, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_GOTREF(__pyx_t_10);
       __Pyx_XDECREF_SET(__pyx_v_k, __pyx_t_9);
@@ -1775,43 +1775,43 @@ static int __pyx_pf_9_readtags_8TagEntry_2__setitem__(struct __pyx_obj_9_readtag
       __Pyx_XDECREF_SET(__pyx_v_v, __pyx_t_10);
       __pyx_t_10 = 0;
 
-      /* "_readtags.pyx":57
+      /* "_readtags.pyx":55
  * 
  *             for k, v in fields.iteritems():
  *                 self.c_entry.fields.list.key = k             # <<<<<<<<<<<<<<
  *                 self.c_entry.fields.list.value = v
  * 
  */
-      __pyx_t_2 = __Pyx_PyObject_AsWritableString(__pyx_v_k); if (unlikely((!__pyx_t_2) && PyErr_Occurred())) __PYX_ERR(1, 57, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_AsWritableString(__pyx_v_k); if (unlikely((!__pyx_t_2) && PyErr_Occurred())) __PYX_ERR(1, 55, __pyx_L1_error)
       __pyx_v_self->c_entry.fields.list->key = __pyx_t_2;
 
-      /* "_readtags.pyx":58
+      /* "_readtags.pyx":56
  *             for k, v in fields.iteritems():
  *                 self.c_entry.fields.list.key = k
  *                 self.c_entry.fields.list.value = v             # <<<<<<<<<<<<<<
  * 
  *     def __getitem__(self, key):
  */
-      __pyx_t_2 = __Pyx_PyObject_AsWritableString(__pyx_v_v); if (unlikely((!__pyx_t_2) && PyErr_Occurred())) __PYX_ERR(1, 58, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_AsWritableString(__pyx_v_v); if (unlikely((!__pyx_t_2) && PyErr_Occurred())) __PYX_ERR(1, 56, __pyx_L1_error)
       __pyx_v_self->c_entry.fields.list->value = __pyx_t_2;
     }
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-    /* "_readtags.pyx":46
- *         elif key == 'fileScope':
+    /* "_readtags.pyx":44
+ *         elif key == "fileScope":
  *             self.c_entry.fileScope = item
- *         elif key == 'fields':             # <<<<<<<<<<<<<<
+ *         elif key == "fields":             # <<<<<<<<<<<<<<
  *             # fields.list is allocated by readtags.c
  *             if self.c_entry.fields.count != len(item):
  */
   }
   __pyx_L3:;
 
-  /* "_readtags.pyx":33
- * 
+  /* "_readtags.pyx":31
+ *         self.c_entry.fields.list = NULL
  * 
  *     def __setitem__(self, key, item):             # <<<<<<<<<<<<<<
- *         if key == 'name':
+ *         if key == "name":
  *             self.c_entry.name = item
  */
 
@@ -1832,12 +1832,12 @@ static int __pyx_pf_9_readtags_8TagEntry_2__setitem__(struct __pyx_obj_9_readtag
   return __pyx_r;
 }
 
-/* "_readtags.pyx":60
+/* "_readtags.pyx":58
  *                 self.c_entry.fields.list.value = v
  * 
  *     def __getitem__(self, key):             # <<<<<<<<<<<<<<
  *         cdef char* result
- *         if key == 'name':
+ *         if key == "name":
  */
 
 /* Python wrapper */
@@ -1865,85 +1865,85 @@ static PyObject *__pyx_pf_9_readtags_8TagEntry_4__getitem__(struct __pyx_obj_9_r
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__getitem__", 0);
 
-  /* "_readtags.pyx":62
+  /* "_readtags.pyx":60
  *     def __getitem__(self, key):
  *         cdef char* result
- *         if key == 'name':             # <<<<<<<<<<<<<<
+ *         if key == "name":             # <<<<<<<<<<<<<<
  *             return self.c_entry.name
- *         elif key == 'file':
+ *         elif key == "file":
  */
-  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_name, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 62, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_name, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 60, __pyx_L1_error)
   if (__pyx_t_1) {
 
-    /* "_readtags.pyx":63
+    /* "_readtags.pyx":61
  *         cdef char* result
- *         if key == 'name':
+ *         if key == "name":
  *             return self.c_entry.name             # <<<<<<<<<<<<<<
- *         elif key == 'file':
+ *         elif key == "file":
  *             return self.c_entry.file
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_2 = __Pyx_PyBytes_FromString(__pyx_v_self->c_entry.name); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 63, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyBytes_FromString(__pyx_v_self->c_entry.name); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 61, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __pyx_r = __pyx_t_2;
+    __pyx_t_2 = 0;
+    goto __pyx_L0;
+
+    /* "_readtags.pyx":60
+ *     def __getitem__(self, key):
+ *         cdef char* result
+ *         if key == "name":             # <<<<<<<<<<<<<<
+ *             return self.c_entry.name
+ *         elif key == "file":
+ */
+  }
+
+  /* "_readtags.pyx":62
+ *         if key == "name":
+ *             return self.c_entry.name
+ *         elif key == "file":             # <<<<<<<<<<<<<<
+ *             return self.c_entry.file
+ *         elif key == "pattern":
+ */
+  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_file, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 62, __pyx_L1_error)
+  if (__pyx_t_1) {
+
+    /* "_readtags.pyx":63
+ *             return self.c_entry.name
+ *         elif key == "file":
+ *             return self.c_entry.file             # <<<<<<<<<<<<<<
+ *         elif key == "pattern":
+ *             if self.c_entry.address.pattern == NULL:
+ */
+    __Pyx_XDECREF(__pyx_r);
+    __pyx_t_2 = __Pyx_PyBytes_FromString(__pyx_v_self->c_entry.file); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 63, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_r = __pyx_t_2;
     __pyx_t_2 = 0;
     goto __pyx_L0;
 
     /* "_readtags.pyx":62
- *     def __getitem__(self, key):
- *         cdef char* result
- *         if key == 'name':             # <<<<<<<<<<<<<<
+ *         if key == "name":
  *             return self.c_entry.name
- *         elif key == 'file':
+ *         elif key == "file":             # <<<<<<<<<<<<<<
+ *             return self.c_entry.file
+ *         elif key == "pattern":
  */
   }
 
   /* "_readtags.pyx":64
- *         if key == 'name':
- *             return self.c_entry.name
- *         elif key == 'file':             # <<<<<<<<<<<<<<
+ *         elif key == "file":
  *             return self.c_entry.file
- *         elif key == 'pattern':
- */
-  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_file, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 64, __pyx_L1_error)
-  if (__pyx_t_1) {
-
-    /* "_readtags.pyx":65
- *             return self.c_entry.name
- *         elif key == 'file':
- *             return self.c_entry.file             # <<<<<<<<<<<<<<
- *         elif key == 'pattern':
- *             if self.c_entry.address.pattern == NULL:
- */
-    __Pyx_XDECREF(__pyx_r);
-    __pyx_t_2 = __Pyx_PyBytes_FromString(__pyx_v_self->c_entry.file); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 65, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __pyx_r = __pyx_t_2;
-    __pyx_t_2 = 0;
-    goto __pyx_L0;
-
-    /* "_readtags.pyx":64
- *         if key == 'name':
- *             return self.c_entry.name
- *         elif key == 'file':             # <<<<<<<<<<<<<<
- *             return self.c_entry.file
- *         elif key == 'pattern':
- */
-  }
-
-  /* "_readtags.pyx":66
- *         elif key == 'file':
- *             return self.c_entry.file
- *         elif key == 'pattern':             # <<<<<<<<<<<<<<
+ *         elif key == "pattern":             # <<<<<<<<<<<<<<
  *             if self.c_entry.address.pattern == NULL:
  *                 return None
  */
-  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_pattern, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 66, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_pattern, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 64, __pyx_L1_error)
   if (__pyx_t_1) {
 
-    /* "_readtags.pyx":67
+    /* "_readtags.pyx":65
  *             return self.c_entry.file
- *         elif key == 'pattern':
+ *         elif key == "pattern":
  *             if self.c_entry.address.pattern == NULL:             # <<<<<<<<<<<<<<
  *                 return None
  *             return self.c_entry.address.pattern
@@ -1951,95 +1951,95 @@ static PyObject *__pyx_pf_9_readtags_8TagEntry_4__getitem__(struct __pyx_obj_9_r
     __pyx_t_1 = ((__pyx_v_self->c_entry.address.pattern == NULL) != 0);
     if (__pyx_t_1) {
 
-      /* "_readtags.pyx":68
- *         elif key == 'pattern':
+      /* "_readtags.pyx":66
+ *         elif key == "pattern":
  *             if self.c_entry.address.pattern == NULL:
  *                 return None             # <<<<<<<<<<<<<<
  *             return self.c_entry.address.pattern
- *         elif key == 'lineNumber':
+ *         elif key == "lineNumber":
  */
       __Pyx_XDECREF(__pyx_r);
       __pyx_r = Py_None; __Pyx_INCREF(Py_None);
       goto __pyx_L0;
 
-      /* "_readtags.pyx":67
+      /* "_readtags.pyx":65
  *             return self.c_entry.file
- *         elif key == 'pattern':
+ *         elif key == "pattern":
  *             if self.c_entry.address.pattern == NULL:             # <<<<<<<<<<<<<<
  *                 return None
  *             return self.c_entry.address.pattern
  */
     }
 
-    /* "_readtags.pyx":69
+    /* "_readtags.pyx":67
  *             if self.c_entry.address.pattern == NULL:
  *                 return None
  *             return self.c_entry.address.pattern             # <<<<<<<<<<<<<<
- *         elif key == 'lineNumber':
+ *         elif key == "lineNumber":
  *             return self.c_entry.address.lineNumber
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_2 = __Pyx_PyBytes_FromString(__pyx_v_self->c_entry.address.pattern); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 69, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyBytes_FromString(__pyx_v_self->c_entry.address.pattern); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 67, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_r = __pyx_t_2;
     __pyx_t_2 = 0;
     goto __pyx_L0;
 
-    /* "_readtags.pyx":66
- *         elif key == 'file':
+    /* "_readtags.pyx":64
+ *         elif key == "file":
  *             return self.c_entry.file
- *         elif key == 'pattern':             # <<<<<<<<<<<<<<
+ *         elif key == "pattern":             # <<<<<<<<<<<<<<
  *             if self.c_entry.address.pattern == NULL:
  *                 return None
+ */
+  }
+
+  /* "_readtags.pyx":68
+ *                 return None
+ *             return self.c_entry.address.pattern
+ *         elif key == "lineNumber":             # <<<<<<<<<<<<<<
+ *             return self.c_entry.address.lineNumber
+ *         elif key == "kind":
+ */
+  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_lineNumber, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 68, __pyx_L1_error)
+  if (__pyx_t_1) {
+
+    /* "_readtags.pyx":69
+ *             return self.c_entry.address.pattern
+ *         elif key == "lineNumber":
+ *             return self.c_entry.address.lineNumber             # <<<<<<<<<<<<<<
+ *         elif key == "kind":
+ *             if self.c_entry.kind == NULL:
+ */
+    __Pyx_XDECREF(__pyx_r);
+    __pyx_t_2 = __Pyx_PyInt_From_unsigned_long(__pyx_v_self->c_entry.address.lineNumber); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 69, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __pyx_r = __pyx_t_2;
+    __pyx_t_2 = 0;
+    goto __pyx_L0;
+
+    /* "_readtags.pyx":68
+ *                 return None
+ *             return self.c_entry.address.pattern
+ *         elif key == "lineNumber":             # <<<<<<<<<<<<<<
+ *             return self.c_entry.address.lineNumber
+ *         elif key == "kind":
  */
   }
 
   /* "_readtags.pyx":70
- *                 return None
- *             return self.c_entry.address.pattern
- *         elif key == 'lineNumber':             # <<<<<<<<<<<<<<
+ *         elif key == "lineNumber":
  *             return self.c_entry.address.lineNumber
- *         elif key == 'kind':
+ *         elif key == "kind":             # <<<<<<<<<<<<<<
+ *             if self.c_entry.kind == NULL:
+ *                 return None
  */
-  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_lineNumber, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 70, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_kind, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 70, __pyx_L1_error)
   if (__pyx_t_1) {
 
     /* "_readtags.pyx":71
- *             return self.c_entry.address.pattern
- *         elif key == 'lineNumber':
- *             return self.c_entry.address.lineNumber             # <<<<<<<<<<<<<<
- *         elif key == 'kind':
- *             if self.c_entry.kind == NULL:
- */
-    __Pyx_XDECREF(__pyx_r);
-    __pyx_t_2 = __Pyx_PyInt_From_unsigned_long(__pyx_v_self->c_entry.address.lineNumber); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 71, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __pyx_r = __pyx_t_2;
-    __pyx_t_2 = 0;
-    goto __pyx_L0;
-
-    /* "_readtags.pyx":70
- *                 return None
- *             return self.c_entry.address.pattern
- *         elif key == 'lineNumber':             # <<<<<<<<<<<<<<
  *             return self.c_entry.address.lineNumber
- *         elif key == 'kind':
- */
-  }
-
-  /* "_readtags.pyx":72
- *         elif key == 'lineNumber':
- *             return self.c_entry.address.lineNumber
- *         elif key == 'kind':             # <<<<<<<<<<<<<<
- *             if self.c_entry.kind == NULL:
- *                 return None
- */
-  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_kind, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 72, __pyx_L1_error)
-  if (__pyx_t_1) {
-
-    /* "_readtags.pyx":73
- *             return self.c_entry.address.lineNumber
- *         elif key == 'kind':
+ *         elif key == "kind":
  *             if self.c_entry.kind == NULL:             # <<<<<<<<<<<<<<
  *                 return None
  *             return self.c_entry.kind
@@ -2047,83 +2047,83 @@ static PyObject *__pyx_pf_9_readtags_8TagEntry_4__getitem__(struct __pyx_obj_9_r
     __pyx_t_1 = ((__pyx_v_self->c_entry.kind == NULL) != 0);
     if (__pyx_t_1) {
 
-      /* "_readtags.pyx":74
- *         elif key == 'kind':
+      /* "_readtags.pyx":72
+ *         elif key == "kind":
  *             if self.c_entry.kind == NULL:
  *                 return None             # <<<<<<<<<<<<<<
  *             return self.c_entry.kind
- *         elif key == 'fileScope':
+ *         elif key == "fileScope":
  */
       __Pyx_XDECREF(__pyx_r);
       __pyx_r = Py_None; __Pyx_INCREF(Py_None);
       goto __pyx_L0;
 
-      /* "_readtags.pyx":73
+      /* "_readtags.pyx":71
  *             return self.c_entry.address.lineNumber
- *         elif key == 'kind':
+ *         elif key == "kind":
  *             if self.c_entry.kind == NULL:             # <<<<<<<<<<<<<<
  *                 return None
  *             return self.c_entry.kind
  */
     }
 
-    /* "_readtags.pyx":75
+    /* "_readtags.pyx":73
  *             if self.c_entry.kind == NULL:
  *                 return None
  *             return self.c_entry.kind             # <<<<<<<<<<<<<<
- *         elif key == 'fileScope':
+ *         elif key == "fileScope":
  *             return self.c_entry.fileScope
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_2 = __Pyx_PyBytes_FromString(__pyx_v_self->c_entry.kind); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 75, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyBytes_FromString(__pyx_v_self->c_entry.kind); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 73, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_r = __pyx_t_2;
     __pyx_t_2 = 0;
     goto __pyx_L0;
 
-    /* "_readtags.pyx":72
- *         elif key == 'lineNumber':
+    /* "_readtags.pyx":70
+ *         elif key == "lineNumber":
  *             return self.c_entry.address.lineNumber
- *         elif key == 'kind':             # <<<<<<<<<<<<<<
+ *         elif key == "kind":             # <<<<<<<<<<<<<<
  *             if self.c_entry.kind == NULL:
  *                 return None
  */
   }
 
-  /* "_readtags.pyx":76
+  /* "_readtags.pyx":74
  *                 return None
  *             return self.c_entry.kind
- *         elif key == 'fileScope':             # <<<<<<<<<<<<<<
+ *         elif key == "fileScope":             # <<<<<<<<<<<<<<
  *             return self.c_entry.fileScope
  *         else:
  */
-  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_fileScope, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 76, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_fileScope, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 74, __pyx_L1_error)
   if (__pyx_t_1) {
 
-    /* "_readtags.pyx":77
+    /* "_readtags.pyx":75
  *             return self.c_entry.kind
- *         elif key == 'fileScope':
+ *         elif key == "fileScope":
  *             return self.c_entry.fileScope             # <<<<<<<<<<<<<<
  *         else:
  *             # It will crash if we mix NULL/0/None
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_2 = __Pyx_PyInt_From_short(__pyx_v_self->c_entry.fileScope); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 77, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyInt_From_short(__pyx_v_self->c_entry.fileScope); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 75, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_r = __pyx_t_2;
     __pyx_t_2 = 0;
     goto __pyx_L0;
 
-    /* "_readtags.pyx":76
+    /* "_readtags.pyx":74
  *                 return None
  *             return self.c_entry.kind
- *         elif key == 'fileScope':             # <<<<<<<<<<<<<<
+ *         elif key == "fileScope":             # <<<<<<<<<<<<<<
  *             return self.c_entry.fileScope
  *         else:
  */
   }
 
-  /* "_readtags.pyx":81
+  /* "_readtags.pyx":79
  *             # It will crash if we mix NULL/0/None
  *             # don't mix comparison of type
  *             result = ctagsField(&self.c_entry, key)             # <<<<<<<<<<<<<<
@@ -2131,10 +2131,10 @@ static PyObject *__pyx_pf_9_readtags_8TagEntry_4__getitem__(struct __pyx_obj_9_r
  *                 return None
  */
   /*else*/ {
-    __pyx_t_3 = __Pyx_PyObject_AsWritableString(__pyx_v_key); if (unlikely((!__pyx_t_3) && PyErr_Occurred())) __PYX_ERR(1, 81, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_AsWritableString(__pyx_v_key); if (unlikely((!__pyx_t_3) && PyErr_Occurred())) __PYX_ERR(1, 79, __pyx_L1_error)
     __pyx_v_result = tagsField((&__pyx_v_self->c_entry), __pyx_t_3);
 
-    /* "_readtags.pyx":82
+    /* "_readtags.pyx":80
  *             # don't mix comparison of type
  *             result = ctagsField(&self.c_entry, key)
  *             if result == NULL:             # <<<<<<<<<<<<<<
@@ -2144,7 +2144,7 @@ static PyObject *__pyx_pf_9_readtags_8TagEntry_4__getitem__(struct __pyx_obj_9_r
     __pyx_t_1 = ((__pyx_v_result == NULL) != 0);
     if (__pyx_t_1) {
 
-      /* "_readtags.pyx":83
+      /* "_readtags.pyx":81
  *             result = ctagsField(&self.c_entry, key)
  *             if result == NULL:
  *                 return None             # <<<<<<<<<<<<<<
@@ -2155,7 +2155,7 @@ static PyObject *__pyx_pf_9_readtags_8TagEntry_4__getitem__(struct __pyx_obj_9_r
       __pyx_r = Py_None; __Pyx_INCREF(Py_None);
       goto __pyx_L0;
 
-      /* "_readtags.pyx":82
+      /* "_readtags.pyx":80
  *             # don't mix comparison of type
  *             result = ctagsField(&self.c_entry, key)
  *             if result == NULL:             # <<<<<<<<<<<<<<
@@ -2164,27 +2164,27 @@ static PyObject *__pyx_pf_9_readtags_8TagEntry_4__getitem__(struct __pyx_obj_9_r
  */
     }
 
-    /* "_readtags.pyx":85
+    /* "_readtags.pyx":83
  *                 return None
  * 
  *             return result             # <<<<<<<<<<<<<<
  * 
- * cdef class CTags:
+ * 
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_2 = __Pyx_PyBytes_FromString(__pyx_v_result); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 85, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyBytes_FromString(__pyx_v_result); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 83, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_r = __pyx_t_2;
     __pyx_t_2 = 0;
     goto __pyx_L0;
   }
 
-  /* "_readtags.pyx":60
+  /* "_readtags.pyx":58
  *                 self.c_entry.fields.list.value = v
  * 
  *     def __getitem__(self, key):             # <<<<<<<<<<<<<<
  *         cdef char* result
- *         if key == 'name':
+ *         if key == "name":
  */
 
   /* function exit code */
@@ -2311,7 +2311,7 @@ static PyObject *__pyx_pf_9_readtags_8TagEntry_8__setstate_cython__(CYTHON_UNUSE
   return __pyx_r;
 }
 
-/* "_readtags.pyx":91
+/* "_readtags.pyx":90
  *     cdef tagFileInfo info
  * 
  *     def __cinit__(self, filepath):             # <<<<<<<<<<<<<<
@@ -2348,7 +2348,7 @@ static int __pyx_pw_9_readtags_5CTags_1__cinit__(PyObject *__pyx_v_self, PyObjec
         else goto __pyx_L5_argtuple_error;
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__cinit__") < 0)) __PYX_ERR(1, 91, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__cinit__") < 0)) __PYX_ERR(1, 90, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 1) {
       goto __pyx_L5_argtuple_error;
@@ -2359,7 +2359,7 @@ static int __pyx_pw_9_readtags_5CTags_1__cinit__(PyObject *__pyx_v_self, PyObjec
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 1, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 91, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 1, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 90, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("_readtags.CTags.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -2383,14 +2383,14 @@ static int __pyx_pf_9_readtags_5CTags___cinit__(struct __pyx_obj_9_readtags_CTag
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__cinit__", 0);
 
-  /* "_readtags.pyx":92
+  /* "_readtags.pyx":91
  * 
  *     def __cinit__(self, filepath):
  *         self.open(filepath)             # <<<<<<<<<<<<<<
  * 
  *     def __dealloc__(self):
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_open); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 92, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_open); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 91, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -2404,12 +2404,12 @@ static int __pyx_pf_9_readtags_5CTags___cinit__(struct __pyx_obj_9_readtags_CTag
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_3, __pyx_v_filepath) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_filepath);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 92, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 91, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "_readtags.pyx":91
+  /* "_readtags.pyx":90
  *     cdef tagFileInfo info
  * 
  *     def __cinit__(self, filepath):             # <<<<<<<<<<<<<<
@@ -2431,7 +2431,7 @@ static int __pyx_pf_9_readtags_5CTags___cinit__(struct __pyx_obj_9_readtags_CTag
   return __pyx_r;
 }
 
-/* "_readtags.pyx":94
+/* "_readtags.pyx":93
  *         self.open(filepath)
  * 
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -2455,7 +2455,7 @@ static void __pyx_pf_9_readtags_5CTags_2__dealloc__(struct __pyx_obj_9_readtags_
   int __pyx_t_1;
   __Pyx_RefNannySetupContext("__dealloc__", 0);
 
-  /* "_readtags.pyx":96
+  /* "_readtags.pyx":95
  *     def __dealloc__(self):
  * 
  *         if self.file:             # <<<<<<<<<<<<<<
@@ -2465,7 +2465,7 @@ static void __pyx_pf_9_readtags_5CTags_2__dealloc__(struct __pyx_obj_9_readtags_
   __pyx_t_1 = (__pyx_v_self->file != 0);
   if (__pyx_t_1) {
 
-    /* "_readtags.pyx":97
+    /* "_readtags.pyx":96
  * 
  *         if self.file:
  *             ctagsClose(self.file)             # <<<<<<<<<<<<<<
@@ -2474,7 +2474,7 @@ static void __pyx_pf_9_readtags_5CTags_2__dealloc__(struct __pyx_obj_9_readtags_
  */
     (void)(tagsClose(__pyx_v_self->file));
 
-    /* "_readtags.pyx":96
+    /* "_readtags.pyx":95
  *     def __dealloc__(self):
  * 
  *         if self.file:             # <<<<<<<<<<<<<<
@@ -2483,7 +2483,7 @@ static void __pyx_pf_9_readtags_5CTags_2__dealloc__(struct __pyx_obj_9_readtags_
  */
   }
 
-  /* "_readtags.pyx":94
+  /* "_readtags.pyx":93
  *         self.open(filepath)
  * 
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -2495,11 +2495,11 @@ static void __pyx_pf_9_readtags_5CTags_2__dealloc__(struct __pyx_obj_9_readtags_
   __Pyx_RefNannyFinishContext();
 }
 
-/* "_readtags.pyx":99
+/* "_readtags.pyx":98
  *             ctagsClose(self.file)
  * 
  *     def __getitem__(self, key):             # <<<<<<<<<<<<<<
- *         if key == 'opened':
+ *         if key == "opened":
  *             return self.info.status.opened
  */
 
@@ -2526,354 +2526,354 @@ static PyObject *__pyx_pf_9_readtags_5CTags_4__getitem__(struct __pyx_obj_9_read
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__getitem__", 0);
 
-  /* "_readtags.pyx":100
+  /* "_readtags.pyx":99
  * 
  *     def __getitem__(self, key):
- *         if key == 'opened':             # <<<<<<<<<<<<<<
+ *         if key == "opened":             # <<<<<<<<<<<<<<
  *             return self.info.status.opened
- *         if key == 'error_number':
+ *         if key == "error_number":
  */
-  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_opened, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 100, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_opened, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 99, __pyx_L1_error)
   if (__pyx_t_1) {
-
-    /* "_readtags.pyx":101
- *     def __getitem__(self, key):
- *         if key == 'opened':
- *             return self.info.status.opened             # <<<<<<<<<<<<<<
- *         if key == 'error_number':
- *             return self.info.status.error_number
- */
-    __Pyx_XDECREF(__pyx_r);
-    __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->info.status.opened); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 101, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __pyx_r = __pyx_t_2;
-    __pyx_t_2 = 0;
-    goto __pyx_L0;
 
     /* "_readtags.pyx":100
+ *     def __getitem__(self, key):
+ *         if key == "opened":
+ *             return self.info.status.opened             # <<<<<<<<<<<<<<
+ *         if key == "error_number":
+ *             return self.info.status.error_number
+ */
+    __Pyx_XDECREF(__pyx_r);
+    __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->info.status.opened); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 100, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __pyx_r = __pyx_t_2;
+    __pyx_t_2 = 0;
+    goto __pyx_L0;
+
+    /* "_readtags.pyx":99
  * 
  *     def __getitem__(self, key):
- *         if key == 'opened':             # <<<<<<<<<<<<<<
+ *         if key == "opened":             # <<<<<<<<<<<<<<
  *             return self.info.status.opened
- *         if key == 'error_number':
+ *         if key == "error_number":
  */
   }
 
-  /* "_readtags.pyx":102
- *         if key == 'opened':
+  /* "_readtags.pyx":101
+ *         if key == "opened":
  *             return self.info.status.opened
- *         if key == 'error_number':             # <<<<<<<<<<<<<<
+ *         if key == "error_number":             # <<<<<<<<<<<<<<
  *             return self.info.status.error_number
- *         if key == 'format':
+ *         if key == "format":
  */
-  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_error_number, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 102, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_error_number, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 101, __pyx_L1_error)
   if (__pyx_t_1) {
-
-    /* "_readtags.pyx":103
- *             return self.info.status.opened
- *         if key == 'error_number':
- *             return self.info.status.error_number             # <<<<<<<<<<<<<<
- *         if key == 'format':
- *             return self.info.file.format
- */
-    __Pyx_XDECREF(__pyx_r);
-    __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->info.status.error_number); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 103, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __pyx_r = __pyx_t_2;
-    __pyx_t_2 = 0;
-    goto __pyx_L0;
 
     /* "_readtags.pyx":102
- *         if key == 'opened':
  *             return self.info.status.opened
- *         if key == 'error_number':             # <<<<<<<<<<<<<<
- *             return self.info.status.error_number
- *         if key == 'format':
- */
-  }
-
-  /* "_readtags.pyx":104
- *         if key == 'error_number':
- *             return self.info.status.error_number
- *         if key == 'format':             # <<<<<<<<<<<<<<
+ *         if key == "error_number":
+ *             return self.info.status.error_number             # <<<<<<<<<<<<<<
+ *         if key == "format":
  *             return self.info.file.format
- *         if key == 'sort':
- */
-  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_format, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 104, __pyx_L1_error)
-  if (__pyx_t_1) {
-
-    /* "_readtags.pyx":105
- *             return self.info.status.error_number
- *         if key == 'format':
- *             return self.info.file.format             # <<<<<<<<<<<<<<
- *         if key == 'sort':
- *             return self.info.file.sort
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_2 = __Pyx_PyInt_From_short(__pyx_v_self->info.file.format); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 105, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->info.status.error_number); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 102, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_r = __pyx_t_2;
     __pyx_t_2 = 0;
     goto __pyx_L0;
+
+    /* "_readtags.pyx":101
+ *         if key == "opened":
+ *             return self.info.status.opened
+ *         if key == "error_number":             # <<<<<<<<<<<<<<
+ *             return self.info.status.error_number
+ *         if key == "format":
+ */
+  }
+
+  /* "_readtags.pyx":103
+ *         if key == "error_number":
+ *             return self.info.status.error_number
+ *         if key == "format":             # <<<<<<<<<<<<<<
+ *             return self.info.file.format
+ *         if key == "sort":
+ */
+  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_format, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 103, __pyx_L1_error)
+  if (__pyx_t_1) {
 
     /* "_readtags.pyx":104
- *         if key == 'error_number':
  *             return self.info.status.error_number
- *         if key == 'format':             # <<<<<<<<<<<<<<
- *             return self.info.file.format
- *         if key == 'sort':
- */
-  }
-
-  /* "_readtags.pyx":106
- *         if key == 'format':
- *             return self.info.file.format
- *         if key == 'sort':             # <<<<<<<<<<<<<<
+ *         if key == "format":
+ *             return self.info.file.format             # <<<<<<<<<<<<<<
+ *         if key == "sort":
  *             return self.info.file.sort
- *         if key == 'author':
- */
-  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_sort, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 106, __pyx_L1_error)
-  if (__pyx_t_1) {
-
-    /* "_readtags.pyx":107
- *             return self.info.file.format
- *         if key == 'sort':
- *             return self.info.file.sort             # <<<<<<<<<<<<<<
- *         if key == 'author':
- *             if self.info.program.author == NULL:
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_2 = __Pyx_PyInt_From_sortType(__pyx_v_self->info.file.sort); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 107, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyInt_From_short(__pyx_v_self->info.file.format); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 104, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_r = __pyx_t_2;
     __pyx_t_2 = 0;
     goto __pyx_L0;
 
-    /* "_readtags.pyx":106
- *         if key == 'format':
+    /* "_readtags.pyx":103
+ *         if key == "error_number":
+ *             return self.info.status.error_number
+ *         if key == "format":             # <<<<<<<<<<<<<<
  *             return self.info.file.format
- *         if key == 'sort':             # <<<<<<<<<<<<<<
- *             return self.info.file.sort
- *         if key == 'author':
+ *         if key == "sort":
  */
   }
 
-  /* "_readtags.pyx":108
- *         if key == 'sort':
+  /* "_readtags.pyx":105
+ *         if key == "format":
+ *             return self.info.file.format
+ *         if key == "sort":             # <<<<<<<<<<<<<<
  *             return self.info.file.sort
- *         if key == 'author':             # <<<<<<<<<<<<<<
- *             if self.info.program.author == NULL:
- *                 return ''
+ *         if key == "author":
  */
-  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_author, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 108, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_sort, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 105, __pyx_L1_error)
   if (__pyx_t_1) {
 
-    /* "_readtags.pyx":109
+    /* "_readtags.pyx":106
+ *             return self.info.file.format
+ *         if key == "sort":
+ *             return self.info.file.sort             # <<<<<<<<<<<<<<
+ *         if key == "author":
+ *             if self.info.program.author == NULL:
+ */
+    __Pyx_XDECREF(__pyx_r);
+    __pyx_t_2 = __Pyx_PyInt_From_sortType(__pyx_v_self->info.file.sort); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 106, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __pyx_r = __pyx_t_2;
+    __pyx_t_2 = 0;
+    goto __pyx_L0;
+
+    /* "_readtags.pyx":105
+ *         if key == "format":
+ *             return self.info.file.format
+ *         if key == "sort":             # <<<<<<<<<<<<<<
  *             return self.info.file.sort
- *         if key == 'author':
+ *         if key == "author":
+ */
+  }
+
+  /* "_readtags.pyx":107
+ *         if key == "sort":
+ *             return self.info.file.sort
+ *         if key == "author":             # <<<<<<<<<<<<<<
+ *             if self.info.program.author == NULL:
+ *                 return ""
+ */
+  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_author, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 107, __pyx_L1_error)
+  if (__pyx_t_1) {
+
+    /* "_readtags.pyx":108
+ *             return self.info.file.sort
+ *         if key == "author":
  *             if self.info.program.author == NULL:             # <<<<<<<<<<<<<<
- *                 return ''
+ *                 return ""
  *             return self.info.program.author
  */
     __pyx_t_1 = ((__pyx_v_self->info.program.author == NULL) != 0);
     if (__pyx_t_1) {
 
-      /* "_readtags.pyx":110
- *         if key == 'author':
+      /* "_readtags.pyx":109
+ *         if key == "author":
  *             if self.info.program.author == NULL:
- *                 return ''             # <<<<<<<<<<<<<<
+ *                 return ""             # <<<<<<<<<<<<<<
  *             return self.info.program.author
- *         if key == 'name':
+ *         if key == "name":
  */
       __Pyx_XDECREF(__pyx_r);
       __Pyx_INCREF(__pyx_kp_s__3);
       __pyx_r = __pyx_kp_s__3;
       goto __pyx_L0;
 
-      /* "_readtags.pyx":109
+      /* "_readtags.pyx":108
  *             return self.info.file.sort
- *         if key == 'author':
+ *         if key == "author":
  *             if self.info.program.author == NULL:             # <<<<<<<<<<<<<<
- *                 return ''
+ *                 return ""
  *             return self.info.program.author
  */
     }
 
-    /* "_readtags.pyx":111
+    /* "_readtags.pyx":110
  *             if self.info.program.author == NULL:
- *                 return ''
+ *                 return ""
  *             return self.info.program.author             # <<<<<<<<<<<<<<
- *         if key == 'name':
+ *         if key == "name":
  *             if self.info.program.name == NULL:
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_2 = __Pyx_PyBytes_FromString(__pyx_v_self->info.program.author); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 111, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyBytes_FromString(__pyx_v_self->info.program.author); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 110, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_r = __pyx_t_2;
     __pyx_t_2 = 0;
     goto __pyx_L0;
 
-    /* "_readtags.pyx":108
- *         if key == 'sort':
+    /* "_readtags.pyx":107
+ *         if key == "sort":
  *             return self.info.file.sort
- *         if key == 'author':             # <<<<<<<<<<<<<<
+ *         if key == "author":             # <<<<<<<<<<<<<<
  *             if self.info.program.author == NULL:
- *                 return ''
+ *                 return ""
  */
   }
 
-  /* "_readtags.pyx":112
- *                 return ''
+  /* "_readtags.pyx":111
+ *                 return ""
  *             return self.info.program.author
- *         if key == 'name':             # <<<<<<<<<<<<<<
+ *         if key == "name":             # <<<<<<<<<<<<<<
  *             if self.info.program.name == NULL:
- *                 return ''
+ *                 return ""
  */
-  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_name, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 112, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_name, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 111, __pyx_L1_error)
   if (__pyx_t_1) {
 
-    /* "_readtags.pyx":113
+    /* "_readtags.pyx":112
  *             return self.info.program.author
- *         if key == 'name':
+ *         if key == "name":
  *             if self.info.program.name == NULL:             # <<<<<<<<<<<<<<
- *                 return ''
+ *                 return ""
  *             return self.info.program.name
  */
     __pyx_t_1 = ((__pyx_v_self->info.program.name == NULL) != 0);
     if (__pyx_t_1) {
 
-      /* "_readtags.pyx":114
- *         if key == 'name':
+      /* "_readtags.pyx":113
+ *         if key == "name":
  *             if self.info.program.name == NULL:
- *                 return ''             # <<<<<<<<<<<<<<
+ *                 return ""             # <<<<<<<<<<<<<<
  *             return self.info.program.name
- *         if key == 'url':
+ *         if key == "url":
  */
       __Pyx_XDECREF(__pyx_r);
       __Pyx_INCREF(__pyx_kp_s__3);
       __pyx_r = __pyx_kp_s__3;
       goto __pyx_L0;
 
-      /* "_readtags.pyx":113
+      /* "_readtags.pyx":112
  *             return self.info.program.author
- *         if key == 'name':
+ *         if key == "name":
  *             if self.info.program.name == NULL:             # <<<<<<<<<<<<<<
- *                 return ''
+ *                 return ""
  *             return self.info.program.name
  */
     }
 
-    /* "_readtags.pyx":115
+    /* "_readtags.pyx":114
  *             if self.info.program.name == NULL:
- *                 return ''
+ *                 return ""
  *             return self.info.program.name             # <<<<<<<<<<<<<<
- *         if key == 'url':
+ *         if key == "url":
  *             if self.info.program.url == NULL:
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_2 = __Pyx_PyBytes_FromString(__pyx_v_self->info.program.name); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 115, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyBytes_FromString(__pyx_v_self->info.program.name); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 114, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_r = __pyx_t_2;
     __pyx_t_2 = 0;
     goto __pyx_L0;
 
-    /* "_readtags.pyx":112
- *                 return ''
+    /* "_readtags.pyx":111
+ *                 return ""
  *             return self.info.program.author
- *         if key == 'name':             # <<<<<<<<<<<<<<
+ *         if key == "name":             # <<<<<<<<<<<<<<
  *             if self.info.program.name == NULL:
- *                 return ''
+ *                 return ""
  */
   }
 
-  /* "_readtags.pyx":116
- *                 return ''
+  /* "_readtags.pyx":115
+ *                 return ""
  *             return self.info.program.name
- *         if key == 'url':             # <<<<<<<<<<<<<<
+ *         if key == "url":             # <<<<<<<<<<<<<<
  *             if self.info.program.url == NULL:
- *                 return ''
+ *                 return ""
  */
-  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_url, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 116, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_url, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 115, __pyx_L1_error)
   if (__pyx_t_1) {
 
-    /* "_readtags.pyx":117
+    /* "_readtags.pyx":116
  *             return self.info.program.name
- *         if key == 'url':
+ *         if key == "url":
  *             if self.info.program.url == NULL:             # <<<<<<<<<<<<<<
- *                 return ''
+ *                 return ""
  *             return self.info.program.url
  */
     __pyx_t_1 = ((__pyx_v_self->info.program.url == NULL) != 0);
     if (__pyx_t_1) {
 
-      /* "_readtags.pyx":118
- *         if key == 'url':
+      /* "_readtags.pyx":117
+ *         if key == "url":
  *             if self.info.program.url == NULL:
- *                 return ''             # <<<<<<<<<<<<<<
+ *                 return ""             # <<<<<<<<<<<<<<
  *             return self.info.program.url
- *         if key == 'version':
+ *         if key == "version":
  */
       __Pyx_XDECREF(__pyx_r);
       __Pyx_INCREF(__pyx_kp_s__3);
       __pyx_r = __pyx_kp_s__3;
       goto __pyx_L0;
 
-      /* "_readtags.pyx":117
+      /* "_readtags.pyx":116
  *             return self.info.program.name
- *         if key == 'url':
+ *         if key == "url":
  *             if self.info.program.url == NULL:             # <<<<<<<<<<<<<<
- *                 return ''
+ *                 return ""
  *             return self.info.program.url
  */
     }
 
-    /* "_readtags.pyx":119
+    /* "_readtags.pyx":118
  *             if self.info.program.url == NULL:
- *                 return ''
+ *                 return ""
  *             return self.info.program.url             # <<<<<<<<<<<<<<
- *         if key == 'version':
+ *         if key == "version":
  *             if self.info.program.version == NULL:
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_2 = __Pyx_PyBytes_FromString(__pyx_v_self->info.program.url); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 119, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyBytes_FromString(__pyx_v_self->info.program.url); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 118, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_r = __pyx_t_2;
     __pyx_t_2 = 0;
     goto __pyx_L0;
 
-    /* "_readtags.pyx":116
- *                 return ''
+    /* "_readtags.pyx":115
+ *                 return ""
  *             return self.info.program.name
- *         if key == 'url':             # <<<<<<<<<<<<<<
+ *         if key == "url":             # <<<<<<<<<<<<<<
  *             if self.info.program.url == NULL:
- *                 return ''
+ *                 return ""
  */
   }
 
-  /* "_readtags.pyx":120
- *                 return ''
+  /* "_readtags.pyx":119
+ *                 return ""
  *             return self.info.program.url
- *         if key == 'version':             # <<<<<<<<<<<<<<
+ *         if key == "version":             # <<<<<<<<<<<<<<
  *             if self.info.program.version == NULL:
- *                 return ''
+ *                 return ""
  */
-  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_version, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 120, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_key, __pyx_n_s_version, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 119, __pyx_L1_error)
   if (__pyx_t_1) {
 
-    /* "_readtags.pyx":121
+    /* "_readtags.pyx":120
  *             return self.info.program.url
- *         if key == 'version':
+ *         if key == "version":
  *             if self.info.program.version == NULL:             # <<<<<<<<<<<<<<
- *                 return ''
+ *                 return ""
  *             return self.info.program.version
  */
     __pyx_t_1 = ((__pyx_v_self->info.program.version == NULL) != 0);
     if (__pyx_t_1) {
 
-      /* "_readtags.pyx":122
- *         if key == 'version':
+      /* "_readtags.pyx":121
+ *         if key == "version":
  *             if self.info.program.version == NULL:
- *                 return ''             # <<<<<<<<<<<<<<
+ *                 return ""             # <<<<<<<<<<<<<<
  *             return self.info.program.version
  * 
  */
@@ -2882,43 +2882,43 @@ static PyObject *__pyx_pf_9_readtags_5CTags_4__getitem__(struct __pyx_obj_9_read
       __pyx_r = __pyx_kp_s__3;
       goto __pyx_L0;
 
-      /* "_readtags.pyx":121
+      /* "_readtags.pyx":120
  *             return self.info.program.url
- *         if key == 'version':
+ *         if key == "version":
  *             if self.info.program.version == NULL:             # <<<<<<<<<<<<<<
- *                 return ''
+ *                 return ""
  *             return self.info.program.version
  */
     }
 
-    /* "_readtags.pyx":123
+    /* "_readtags.pyx":122
  *             if self.info.program.version == NULL:
- *                 return ''
+ *                 return ""
  *             return self.info.program.version             # <<<<<<<<<<<<<<
  * 
- * 
+ *     def open(self, filepath):
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_2 = __Pyx_PyBytes_FromString(__pyx_v_self->info.program.version); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 123, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyBytes_FromString(__pyx_v_self->info.program.version); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 122, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_r = __pyx_t_2;
     __pyx_t_2 = 0;
     goto __pyx_L0;
 
-    /* "_readtags.pyx":120
- *                 return ''
+    /* "_readtags.pyx":119
+ *                 return ""
  *             return self.info.program.url
- *         if key == 'version':             # <<<<<<<<<<<<<<
+ *         if key == "version":             # <<<<<<<<<<<<<<
  *             if self.info.program.version == NULL:
- *                 return ''
+ *                 return ""
  */
   }
 
-  /* "_readtags.pyx":99
+  /* "_readtags.pyx":98
  *             ctagsClose(self.file)
  * 
  *     def __getitem__(self, key):             # <<<<<<<<<<<<<<
- *         if key == 'opened':
+ *         if key == "opened":
  *             return self.info.status.opened
  */
 
@@ -2935,8 +2935,8 @@ static PyObject *__pyx_pf_9_readtags_5CTags_4__getitem__(struct __pyx_obj_9_read
   return __pyx_r;
 }
 
-/* "_readtags.pyx":126
- * 
+/* "_readtags.pyx":124
+ *             return self.info.program.version
  * 
  *     def open(self, filepath):             # <<<<<<<<<<<<<<
  *         if isinstance(filepath, str):
@@ -2973,29 +2973,29 @@ static PyObject *__pyx_pf_9_readtags_5CTags_6open(struct __pyx_obj_9_readtags_CT
   __Pyx_RefNannySetupContext("open", 0);
   __Pyx_INCREF(__pyx_v_filepath);
 
-  /* "_readtags.pyx":127
+  /* "_readtags.pyx":125
  * 
  *     def open(self, filepath):
  *         if isinstance(filepath, str):             # <<<<<<<<<<<<<<
  *             filepath = filepath.encode(sys.getfilesystemencoding())
- *         self.file = ctagsOpen(filepath, &self.info)
+ * 
  */
   __pyx_t_1 = PyString_Check(__pyx_v_filepath); 
   __pyx_t_2 = (__pyx_t_1 != 0);
   if (__pyx_t_2) {
 
-    /* "_readtags.pyx":128
+    /* "_readtags.pyx":126
  *     def open(self, filepath):
  *         if isinstance(filepath, str):
  *             filepath = filepath.encode(sys.getfilesystemencoding())             # <<<<<<<<<<<<<<
- *         self.file = ctagsOpen(filepath, &self.info)
  * 
+ *         self.file = ctagsOpen(filepath, &self.info)
  */
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_filepath, __pyx_n_s_encode); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 128, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_filepath, __pyx_n_s_encode); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 126, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_sys); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 128, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_sys); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 126, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_getfilesystemencoding); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 128, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_getfilesystemencoding); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 126, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __pyx_t_6 = NULL;
@@ -3010,7 +3010,7 @@ static PyObject *__pyx_pf_9_readtags_5CTags_6open(struct __pyx_obj_9_readtags_CT
     }
     __pyx_t_5 = (__pyx_t_6) ? __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_t_6) : __Pyx_PyObject_CallNoArg(__pyx_t_7);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 128, __pyx_L1_error)
+    if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 126, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     __pyx_t_7 = NULL;
@@ -3026,65 +3026,65 @@ static PyObject *__pyx_pf_9_readtags_5CTags_6open(struct __pyx_obj_9_readtags_CT
     __pyx_t_3 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_7, __pyx_t_5) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5);
     __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 128, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 126, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF_SET(__pyx_v_filepath, __pyx_t_3);
     __pyx_t_3 = 0;
 
-    /* "_readtags.pyx":127
+    /* "_readtags.pyx":125
  * 
  *     def open(self, filepath):
  *         if isinstance(filepath, str):             # <<<<<<<<<<<<<<
  *             filepath = filepath.encode(sys.getfilesystemencoding())
- *         self.file = ctagsOpen(filepath, &self.info)
+ * 
  */
   }
 
-  /* "_readtags.pyx":129
- *         if isinstance(filepath, str):
+  /* "_readtags.pyx":128
  *             filepath = filepath.encode(sys.getfilesystemencoding())
+ * 
  *         self.file = ctagsOpen(filepath, &self.info)             # <<<<<<<<<<<<<<
  * 
  *         if not self.info.status.opened:
  */
-  __pyx_t_8 = __Pyx_PyObject_AsWritableString(__pyx_v_filepath); if (unlikely((!__pyx_t_8) && PyErr_Occurred())) __PYX_ERR(1, 129, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_AsWritableString(__pyx_v_filepath); if (unlikely((!__pyx_t_8) && PyErr_Occurred())) __PYX_ERR(1, 128, __pyx_L1_error)
   __pyx_v_self->file = tagsOpen(__pyx_t_8, (&__pyx_v_self->info));
 
-  /* "_readtags.pyx":131
+  /* "_readtags.pyx":130
  *         self.file = ctagsOpen(filepath, &self.info)
  * 
  *         if not self.info.status.opened:             # <<<<<<<<<<<<<<
- *             raise Exception('Invalid tag file')
+ *             raise Exception("Invalid tag file")
  * 
  */
   __pyx_t_2 = ((!(__pyx_v_self->info.status.opened != 0)) != 0);
   if (unlikely(__pyx_t_2)) {
 
-    /* "_readtags.pyx":132
+    /* "_readtags.pyx":131
  * 
  *         if not self.info.status.opened:
- *             raise Exception('Invalid tag file')             # <<<<<<<<<<<<<<
+ *             raise Exception("Invalid tag file")             # <<<<<<<<<<<<<<
  * 
  *     def setSortType(self, tagSortType type):
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])), __pyx_tuple__4, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 132, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])), __pyx_tuple__4, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 131, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __PYX_ERR(1, 132, __pyx_L1_error)
+    __PYX_ERR(1, 131, __pyx_L1_error)
 
-    /* "_readtags.pyx":131
+    /* "_readtags.pyx":130
  *         self.file = ctagsOpen(filepath, &self.info)
  * 
  *         if not self.info.status.opened:             # <<<<<<<<<<<<<<
- *             raise Exception('Invalid tag file')
+ *             raise Exception("Invalid tag file")
  * 
  */
   }
 
-  /* "_readtags.pyx":126
- * 
+  /* "_readtags.pyx":124
+ *             return self.info.program.version
  * 
  *     def open(self, filepath):             # <<<<<<<<<<<<<<
  *         if isinstance(filepath, str):
@@ -3109,8 +3109,8 @@ static PyObject *__pyx_pf_9_readtags_5CTags_6open(struct __pyx_obj_9_readtags_CT
   return __pyx_r;
 }
 
-/* "_readtags.pyx":134
- *             raise Exception('Invalid tag file')
+/* "_readtags.pyx":133
+ *             raise Exception("Invalid tag file")
  * 
  *     def setSortType(self, tagSortType type):             # <<<<<<<<<<<<<<
  *         return ctagsSetSortType(self.file, type)
@@ -3128,7 +3128,7 @@ static PyObject *__pyx_pw_9_readtags_5CTags_9setSortType(PyObject *__pyx_v_self,
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("setSortType (wrapper)", 0);
   assert(__pyx_arg_type); {
-    __pyx_v_type = ((sortType)__Pyx_PyInt_As_sortType(__pyx_arg_type)); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 134, __pyx_L3_error)
+    __pyx_v_type = ((sortType)__Pyx_PyInt_As_sortType(__pyx_arg_type)); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 133, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -3152,7 +3152,7 @@ static PyObject *__pyx_pf_9_readtags_5CTags_8setSortType(struct __pyx_obj_9_read
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("setSortType", 0);
 
-  /* "_readtags.pyx":135
+  /* "_readtags.pyx":134
  * 
  *     def setSortType(self, tagSortType type):
  *         return ctagsSetSortType(self.file, type)             # <<<<<<<<<<<<<<
@@ -3160,14 +3160,14 @@ static PyObject *__pyx_pf_9_readtags_5CTags_8setSortType(struct __pyx_obj_9_read
  *     def first(self, TagEntry entry):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_tagResult(tagsSetSortType(__pyx_v_self->file, __pyx_v_type)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 135, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_tagResult(tagsSetSortType(__pyx_v_self->file, __pyx_v_type)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 134, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "_readtags.pyx":134
- *             raise Exception('Invalid tag file')
+  /* "_readtags.pyx":133
+ *             raise Exception("Invalid tag file")
  * 
  *     def setSortType(self, tagSortType type):             # <<<<<<<<<<<<<<
  *         return ctagsSetSortType(self.file, type)
@@ -3185,7 +3185,7 @@ static PyObject *__pyx_pf_9_readtags_5CTags_8setSortType(struct __pyx_obj_9_read
   return __pyx_r;
 }
 
-/* "_readtags.pyx":137
+/* "_readtags.pyx":136
  *         return ctagsSetSortType(self.file, type)
  * 
  *     def first(self, TagEntry entry):             # <<<<<<<<<<<<<<
@@ -3202,7 +3202,7 @@ static PyObject *__pyx_pw_9_readtags_5CTags_11first(PyObject *__pyx_v_self, PyOb
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("first (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_entry), __pyx_ptype_9_readtags_TagEntry, 1, "entry", 0))) __PYX_ERR(1, 137, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_entry), __pyx_ptype_9_readtags_TagEntry, 1, "entry", 0))) __PYX_ERR(1, 136, __pyx_L1_error)
   __pyx_r = __pyx_pf_9_readtags_5CTags_10first(((struct __pyx_obj_9_readtags_CTags *)__pyx_v_self), ((struct __pyx_obj_9_readtags_TagEntry *)__pyx_v_entry));
 
   /* function exit code */
@@ -3223,7 +3223,7 @@ static PyObject *__pyx_pf_9_readtags_5CTags_10first(struct __pyx_obj_9_readtags_
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("first", 0);
 
-  /* "_readtags.pyx":138
+  /* "_readtags.pyx":137
  * 
  *     def first(self, TagEntry entry):
  *         return ctagsFirst(self.file, &entry.c_entry)             # <<<<<<<<<<<<<<
@@ -3231,13 +3231,13 @@ static PyObject *__pyx_pf_9_readtags_5CTags_10first(struct __pyx_obj_9_readtags_
  *     def find(self, TagEntry entry, char* name, int options):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_tagResult(tagsFirst(__pyx_v_self->file, (&__pyx_v_entry->c_entry))); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 138, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_tagResult(tagsFirst(__pyx_v_self->file, (&__pyx_v_entry->c_entry))); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 137, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "_readtags.pyx":137
+  /* "_readtags.pyx":136
  *         return ctagsSetSortType(self.file, type)
  * 
  *     def first(self, TagEntry entry):             # <<<<<<<<<<<<<<
@@ -3256,7 +3256,7 @@ static PyObject *__pyx_pf_9_readtags_5CTags_10first(struct __pyx_obj_9_readtags_
   return __pyx_r;
 }
 
-/* "_readtags.pyx":140
+/* "_readtags.pyx":139
  *         return ctagsFirst(self.file, &entry.c_entry)
  * 
  *     def find(self, TagEntry entry, char* name, int options):             # <<<<<<<<<<<<<<
@@ -3301,17 +3301,17 @@ static PyObject *__pyx_pw_9_readtags_5CTags_13find(PyObject *__pyx_v_self, PyObj
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_name)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("find", 1, 3, 3, 1); __PYX_ERR(1, 140, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("find", 1, 3, 3, 1); __PYX_ERR(1, 139, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_options)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("find", 1, 3, 3, 2); __PYX_ERR(1, 140, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("find", 1, 3, 3, 2); __PYX_ERR(1, 139, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "find") < 0)) __PYX_ERR(1, 140, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "find") < 0)) __PYX_ERR(1, 139, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
       goto __pyx_L5_argtuple_error;
@@ -3321,18 +3321,18 @@ static PyObject *__pyx_pw_9_readtags_5CTags_13find(PyObject *__pyx_v_self, PyObj
       values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
     }
     __pyx_v_entry = ((struct __pyx_obj_9_readtags_TagEntry *)values[0]);
-    __pyx_v_name = __Pyx_PyObject_AsWritableString(values[1]); if (unlikely((!__pyx_v_name) && PyErr_Occurred())) __PYX_ERR(1, 140, __pyx_L3_error)
-    __pyx_v_options = __Pyx_PyInt_As_int(values[2]); if (unlikely((__pyx_v_options == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 140, __pyx_L3_error)
+    __pyx_v_name = __Pyx_PyObject_AsWritableString(values[1]); if (unlikely((!__pyx_v_name) && PyErr_Occurred())) __PYX_ERR(1, 139, __pyx_L3_error)
+    __pyx_v_options = __Pyx_PyInt_As_int(values[2]); if (unlikely((__pyx_v_options == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 139, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("find", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 140, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("find", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 139, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("_readtags.CTags.find", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_entry), __pyx_ptype_9_readtags_TagEntry, 1, "entry", 0))) __PYX_ERR(1, 140, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_entry), __pyx_ptype_9_readtags_TagEntry, 1, "entry", 0))) __PYX_ERR(1, 139, __pyx_L1_error)
   __pyx_r = __pyx_pf_9_readtags_5CTags_12find(((struct __pyx_obj_9_readtags_CTags *)__pyx_v_self), __pyx_v_entry, __pyx_v_name, __pyx_v_options);
 
   /* function exit code */
@@ -3353,7 +3353,7 @@ static PyObject *__pyx_pf_9_readtags_5CTags_12find(struct __pyx_obj_9_readtags_C
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("find", 0);
 
-  /* "_readtags.pyx":141
+  /* "_readtags.pyx":140
  * 
  *     def find(self, TagEntry entry, char* name, int options):
  *         return ctagsFind(self.file, &entry.c_entry, name, options)             # <<<<<<<<<<<<<<
@@ -3361,13 +3361,13 @@ static PyObject *__pyx_pf_9_readtags_5CTags_12find(struct __pyx_obj_9_readtags_C
  *     def findNext(self, TagEntry entry):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_tagResult(tagsFind(__pyx_v_self->file, (&__pyx_v_entry->c_entry), __pyx_v_name, __pyx_v_options)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 141, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_tagResult(tagsFind(__pyx_v_self->file, (&__pyx_v_entry->c_entry), __pyx_v_name, __pyx_v_options)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 140, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "_readtags.pyx":140
+  /* "_readtags.pyx":139
  *         return ctagsFirst(self.file, &entry.c_entry)
  * 
  *     def find(self, TagEntry entry, char* name, int options):             # <<<<<<<<<<<<<<
@@ -3386,7 +3386,7 @@ static PyObject *__pyx_pf_9_readtags_5CTags_12find(struct __pyx_obj_9_readtags_C
   return __pyx_r;
 }
 
-/* "_readtags.pyx":143
+/* "_readtags.pyx":142
  *         return ctagsFind(self.file, &entry.c_entry, name, options)
  * 
  *     def findNext(self, TagEntry entry):             # <<<<<<<<<<<<<<
@@ -3403,7 +3403,7 @@ static PyObject *__pyx_pw_9_readtags_5CTags_15findNext(PyObject *__pyx_v_self, P
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("findNext (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_entry), __pyx_ptype_9_readtags_TagEntry, 1, "entry", 0))) __PYX_ERR(1, 143, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_entry), __pyx_ptype_9_readtags_TagEntry, 1, "entry", 0))) __PYX_ERR(1, 142, __pyx_L1_error)
   __pyx_r = __pyx_pf_9_readtags_5CTags_14findNext(((struct __pyx_obj_9_readtags_CTags *)__pyx_v_self), ((struct __pyx_obj_9_readtags_TagEntry *)__pyx_v_entry));
 
   /* function exit code */
@@ -3424,7 +3424,7 @@ static PyObject *__pyx_pf_9_readtags_5CTags_14findNext(struct __pyx_obj_9_readta
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("findNext", 0);
 
-  /* "_readtags.pyx":144
+  /* "_readtags.pyx":143
  * 
  *     def findNext(self, TagEntry entry):
  *         return ctagsFindNext(self.file, &entry.c_entry)             # <<<<<<<<<<<<<<
@@ -3432,13 +3432,13 @@ static PyObject *__pyx_pf_9_readtags_5CTags_14findNext(struct __pyx_obj_9_readta
  *     def next(self, TagEntry entry):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_tagResult(tagsFindNext(__pyx_v_self->file, (&__pyx_v_entry->c_entry))); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 144, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_tagResult(tagsFindNext(__pyx_v_self->file, (&__pyx_v_entry->c_entry))); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 143, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "_readtags.pyx":143
+  /* "_readtags.pyx":142
  *         return ctagsFind(self.file, &entry.c_entry, name, options)
  * 
  *     def findNext(self, TagEntry entry):             # <<<<<<<<<<<<<<
@@ -3457,12 +3457,11 @@ static PyObject *__pyx_pf_9_readtags_5CTags_14findNext(struct __pyx_obj_9_readta
   return __pyx_r;
 }
 
-/* "_readtags.pyx":146
+/* "_readtags.pyx":145
  *         return ctagsFindNext(self.file, &entry.c_entry)
  * 
  *     def next(self, TagEntry entry):             # <<<<<<<<<<<<<<
  *         return ctagsNext(self.file, &entry.c_entry)
- * 
  */
 
 /* Python wrapper */
@@ -3474,7 +3473,7 @@ static PyObject *__pyx_pw_9_readtags_5CTags_17next(PyObject *__pyx_v_self, PyObj
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("next (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_entry), __pyx_ptype_9_readtags_TagEntry, 1, "entry", 0))) __PYX_ERR(1, 146, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_entry), __pyx_ptype_9_readtags_TagEntry, 1, "entry", 0))) __PYX_ERR(1, 145, __pyx_L1_error)
   __pyx_r = __pyx_pf_9_readtags_5CTags_16next(((struct __pyx_obj_9_readtags_CTags *)__pyx_v_self), ((struct __pyx_obj_9_readtags_TagEntry *)__pyx_v_entry));
 
   /* function exit code */
@@ -3495,25 +3494,23 @@ static PyObject *__pyx_pf_9_readtags_5CTags_16next(struct __pyx_obj_9_readtags_C
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("next", 0);
 
-  /* "_readtags.pyx":147
+  /* "_readtags.pyx":146
  * 
  *     def next(self, TagEntry entry):
  *         return ctagsNext(self.file, &entry.c_entry)             # <<<<<<<<<<<<<<
- * 
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_tagResult(tagsNext(__pyx_v_self->file, (&__pyx_v_entry->c_entry))); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 147, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_tagResult(tagsNext(__pyx_v_self->file, (&__pyx_v_entry->c_entry))); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 146, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "_readtags.pyx":146
+  /* "_readtags.pyx":145
  *         return ctagsFindNext(self.file, &entry.c_entry)
  * 
  *     def next(self, TagEntry entry):             # <<<<<<<<<<<<<<
  *         return ctagsNext(self.file, &entry.c_entry)
- * 
  */
 
   /* function exit code */
@@ -4032,14 +4029,14 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__2);
   __Pyx_GIVEREF(__pyx_tuple__2);
 
-  /* "_readtags.pyx":132
+  /* "_readtags.pyx":131
  * 
  *         if not self.info.status.opened:
- *             raise Exception('Invalid tag file')             # <<<<<<<<<<<<<<
+ *             raise Exception("Invalid tag file")             # <<<<<<<<<<<<<<
  * 
  *     def setSortType(self, tagSortType type):
  */
-  __pyx_tuple__4 = PyTuple_Pack(1, __pyx_kp_s_Invalid_tag_file); if (unlikely(!__pyx_tuple__4)) __PYX_ERR(1, 132, __pyx_L1_error)
+  __pyx_tuple__4 = PyTuple_Pack(1, __pyx_kp_s_Invalid_tag_file); if (unlikely(!__pyx_tuple__4)) __PYX_ERR(1, 131, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__4);
   __Pyx_GIVEREF(__pyx_tuple__4);
 
@@ -4114,25 +4111,25 @@ static int __Pyx_modinit_type_init_code(void) {
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__Pyx_modinit_type_init_code", 0);
   /*--- Type init code ---*/
-  if (PyType_Ready(&__pyx_type_9_readtags_TagEntry) < 0) __PYX_ERR(1, 25, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_9_readtags_TagEntry) < 0) __PYX_ERR(1, 24, __pyx_L1_error)
   #if PY_VERSION_HEX < 0x030800B1
   __pyx_type_9_readtags_TagEntry.tp_print = 0;
   #endif
   if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_9_readtags_TagEntry.tp_dictoffset && __pyx_type_9_readtags_TagEntry.tp_getattro == PyObject_GenericGetAttr)) {
     __pyx_type_9_readtags_TagEntry.tp_getattro = __Pyx_PyObject_GenericGetAttr;
   }
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_TagEntry, (PyObject *)&__pyx_type_9_readtags_TagEntry) < 0) __PYX_ERR(1, 25, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_9_readtags_TagEntry) < 0) __PYX_ERR(1, 25, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_TagEntry, (PyObject *)&__pyx_type_9_readtags_TagEntry) < 0) __PYX_ERR(1, 24, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_9_readtags_TagEntry) < 0) __PYX_ERR(1, 24, __pyx_L1_error)
   __pyx_ptype_9_readtags_TagEntry = &__pyx_type_9_readtags_TagEntry;
-  if (PyType_Ready(&__pyx_type_9_readtags_CTags) < 0) __PYX_ERR(1, 87, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_9_readtags_CTags) < 0) __PYX_ERR(1, 86, __pyx_L1_error)
   #if PY_VERSION_HEX < 0x030800B1
   __pyx_type_9_readtags_CTags.tp_print = 0;
   #endif
   if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_9_readtags_CTags.tp_dictoffset && __pyx_type_9_readtags_CTags.tp_getattro == PyObject_GenericGetAttr)) {
     __pyx_type_9_readtags_CTags.tp_getattro = __Pyx_PyObject_GenericGetAttr;
   }
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_CTags, (PyObject *)&__pyx_type_9_readtags_CTags) < 0) __PYX_ERR(1, 87, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_9_readtags_CTags) < 0) __PYX_ERR(1, 87, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_CTags, (PyObject *)&__pyx_type_9_readtags_CTags) < 0) __PYX_ERR(1, 86, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_9_readtags_CTags) < 0) __PYX_ERR(1, 86, __pyx_L1_error)
   __pyx_ptype_9_readtags_CTags = &__pyx_type_9_readtags_CTags;
   __Pyx_RefNannyFinishContext();
   return 0;
