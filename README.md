@@ -35,75 +35,106 @@ ctags --fields=afmikKlnsStz readtags.c  readtags.h
 **Opening Tags File**
 ```python
 import ctags
-from ctags import CTags, TagEntry
+from ctags import CTags
 import sys
 
 try:
     tagFile = CTags('tags')
-except:
+except OSError as err:
+    print(err)
     sys.exit(1)
 
 # Available file information keys:
 #  opened -  was the tag file successfully opened?
 #  error_number - errno value when 'opened' is false
 #  format - format of tag file (1 = original, 2 = extended)
-#  sort - how is the tag file sorted? 
-#  author - name of author of generating program (may be empy string)
-#  name - name of program (may be empy string)
-#  url - URL of distribution (may be empy string)
-#  version - program version (may be empty string)
+#  sort - how is the tag file sorted?
+#
+# Other keys may be available:
+#  author - name of author of generating program
+#  name - name of program
+#  url - URL of distribution
+#  version - program version
+# If one of them is not present a KeyError is raised.
 
-print tagFile['name']
-print tagFile['author']
-print tagFile['format']
+try:
+    print(tagFile['name'])
+except KeyError:
+    print("No 'name' in the tagfile")
+
+try:
+    print(tagFile['author'])
+except KeyError:
+    print("No 'author' in the tagfile")
+
+print(tagFile['format'])
 
 # Available sort type:
 #  TAG_UNSORTED, TAG_SORTED, TAG_FOLDSORTED
 
 # Note: use this only if you know how the tags file is sorted which is 
 # specified when you generate the tag file
-status = tagFile.setSortType(ctags.TAG_SORTED)
+tagFile.setSortType(ctags.TAG_SORTED)
 ```
 
-**Obtaining First Tag Entry**
+**Listing Tag Entries**
 ```python
-entry = TagEntry()
-status = tagFile.first(entry)
+# A generator of all tags in the file can be obtain with:
+all_tags = tagFile.all_tags()
 
-if status:
-    # Available TagEntry keys:
-    #  name - name of tag
-    #  file - path of source file containing definition of tag
-    #  pattern - pattern for locating source line (None if no pattern)
-    #  lineNumber - line number in source file of tag definition (may be zero if not known)
-    #  kind - kind of tag (none if not known)
-    #  fileScope - is tag of file-limited scope?
-    
-    # Note: other keys will be assumed as an extension key and will 
-    # return None if no such key is found 
+# The generator yield a dict for each entry.
+# The following keys are always available for a entry:
+#  name - name of tag
+#  file - path of source file containing definition of tag
+#  pattern - pattern for locating source line
+#            (None if no pattern, this should no huppen with a correct
+#             tag file)
+#  fileScope - is tag of file-limited scope?
+#
+# The dict may contain other keys (extension keys).
+# Other keys include :
+#  lineNumber - line number in source file of tag definition
+#  kind - kind of tag
 
-    print entry['name']
-    print entry['kind']
+for entry in all_tags:
+    print(entry['name'])
+    print(entry['file'])
+    try:
+        entry['lineNumber']
+    except KeyError:
+        print("Entry has no lineNumber")
+    else:
+        print("Entry has a lineNumber")
 ```
 
-**Finding a Tag Entry**
-```python   
+**Finding Tag Entries**
+```python
 # Available options: 
 # TAG_PARTIALMATCH - begin with
 # TAG_FULLMATCH - full length matching
 # TAG_IGNORECASE - disable binary search
 # TAG_OBSERVECASE - case sensitive and allowed binary search to perform
 
-if tagFile.find(entry, 'find', ctags.TAG_PARTIALMATCH | ctags.TAG_IGNORECASE):
-    print 'found'
-    print entry['lineNumber']
-    print entry['pattern']
-    print entry['kind']
+found_tags = tagFile.find_tags('find', ctags.TAG_PARTIALMATCH | ctags.TAG_IGNORECASE)
+for entry in found_tags:
+    print(entry['lineNumber'])
+    print(entry['pattern'])
+    print(entry['kind'])
 
-# Find the next tag matching the name and options supplied to the 
-# most recent call to tagFile.find().  (replace the entry if found)
-status = tagFile.findNext(entry)
 
-# Step to the next tag in the file (replace entry if found)
-status = tagFile.next(entry)
+# File Encoding.
+
+By default, CTags return unicode strings using the 'utf8' encoding.
+This can be changed by providing a custom encoding at CTags creation :
+
+```python
+tagFile = CTags('tags', encoding='latin1')
 ```
+
+If None is provided as encoding, no encoding is done and entries will contain
+bytes instead of string.
+
+This is also possible to provide a encoding_errors.
+It will be passed to the encode function as the 'errors' argument.
+See the definition of the encode function to know how to use this argument.
+By default, encoding_errors is 'strict'.

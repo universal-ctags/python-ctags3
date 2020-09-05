@@ -17,130 +17,161 @@ You should have received a copy of the GNU General Public License
 along with Python-Ctags.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+cdef extern from "string.h":
+    char* strerror(int errnum)
 
 include "stdlib.pxi"
 include "readtags.pxi"
+import sys
 
 
-cdef class TagEntry:
-    cdef tagEntry c_entry
-
-    def __cinit__(self):
-        self.c_entry.fields.count = 0
-        self.c_entry.fields.list = NULL
-
-
-    def __setitem__(self, key, item):
-        if key == 'name':
-            self.c_entry.name = item 
-        elif key == 'file':
-            self.c_entry.file = item
-        elif key == 'pattern':
-            self.c_entry.address.pattern = item
-        elif key == 'lineNumber':
-            self.c_entry.address.lineNumber = item
-        elif key == 'kind':
-            self.c_entry.kind = item
-        elif key == 'fileScope':
-            self.c_entry.fileScope = item
-        elif key == 'fields':
-            # fields.list is allocated by readtags.c
-            if self.c_entry.fields.count != len(item):
-                return 
-
-            fields = item
-            if self.c_entry.fields.list != NULL:
-                free(self.c_entry.fields.list)
-                self.c_entry.fields.list = NULL
-
-            for k, v in fields.iteritems():
-                self.c_entry.fields.list.key = k
-                self.c_entry.fields.list.value = v
-
-    def __getitem__(self, key):
-        cdef char* result
-        if key == 'name':
-            return self.c_entry.name
-        elif key == 'file':
-            return self.c_entry.file 
-        elif key == 'pattern':
-            if self.c_entry.address.pattern == NULL:
-                return None
-            return self.c_entry.address.pattern 
-        elif key == 'lineNumber':
-            return self.c_entry.address.lineNumber 
-        elif key == 'kind':
-            if self.c_entry.kind == NULL:
-                return None
-            return self.c_entry.kind
-        elif key == 'fileScope':
-            return self.c_entry.fileScope 
-        else:
-            # It will crash if we mix NULL/0/None
-            # don't mix comparison of type
-            result = ctagsField(&self.c_entry, key)
-            if result == NULL:
-                return None
-
-            return result
 
 cdef class CTags:
     cdef tagFile* file
     cdef tagFileInfo info
+    cdef tagEntry c_entry
+    cdef object current_id
+    cdef object encoding
+    cdef str encoding_errors
 
-    def __cinit__(self, filepath):
-        self.open(filepath)
+    def __cinit__(self, filepath, encoding='utf8', encoding_errors='strict'):
+        if isinstance(filepath, unicode):
+            filepath = (<unicode>filepath).encode(sys.getfilesystemencoding())
+        self.file = ctagsOpen(filepath, &self.info)
+        if not self.file:
+            raise OSError(self.info.status.error_number,
+                          strerror(self.info.status.error_number),
+                          filepath)
+        self.encoding = encoding
+        self.encoding_errors = encoding_errors
+
+    cdef decode(self, bytes bytes_array):
+        if not self.encoding:
+            return bytes_array
+        return bytes_array.decode(self.encoding, self.encoding_errors)
 
     def __dealloc__(self):
-
         if self.file:
             ctagsClose(self.file)
 
     def __getitem__(self, key):
-        if key == 'opened':
-            return self.info.status.opened
-        if key == 'error_number':
-            return self.info.status.error_number
+        ret = None
         if key == 'format':
             return self.info.file.format
-        if key == 'sort':
+        elif key == 'sort':
             return self.info.file.sort
-        if key == 'author':
-            if self.info.program.author == NULL:
-                return ''
-            return self.info.program.author
-        if key == 'name':
-            if self.info.program.name == NULL:
-                return ''
-            return self.info.program.name
-        if key == 'url':
-            if self.info.program.url == NULL:
-                return ''
-            return self.info.program.url
-        if key == 'version':
-            if self.info.program.version == NULL:
-                return ''
-            return self.info.program.version
-
-
-    def open(self, filepath):
-        self.file = ctagsOpen(filepath, &self.info)
-
-        if not self.info.status.opened:
-            raise Exception('Invalid tag file')
+        else:
+            if key == 'author':
+                ret = self.info.program.author
+            elif key == 'name':
+                ret = self.info.program.name
+            elif key == 'url':
+                ret = self.info.program.url
+            elif key == 'version':
+                ret = self.info.program.version
+            if ret is None:
+                raise KeyError(key)
+            return self.decode(ret)
 
     def setSortType(self, tagSortType type):
-        return ctagsSetSortType(self.file, type)
+        success = ctagsSetSortType(self.file, type)
+        if not success:
+            raise RuntimeError()
 
-    def first(self, TagEntry entry):
-        return ctagsFirst(self.file, &entry.c_entry)
+    cdef create_tagEntry(self, const tagEntry* const c_entry):
+        cdef dict ret = {}
+        ret['name'] = self.decode(c_entry.name)
+        ret['file'] = self.decode(c_entry.file)
+        ret['fileScope'] = c_entry.fileScope
+        if c_entry.address.pattern != NULL:
+            ret['pattern'] = self.decode(c_entry.address.pattern)
+        if c_entry.address.lineNumber:
+            ret['lineNumber'] = c_entry.address.lineNumber
+        if c_entry.kind != NULL:
+            ret['kind'] = self.decode(c_entry.kind)
+        for index in range(c_entry.fields.count):
+            key = c_entry.fields.list[index].key
+            ret[key.decode()] = self.decode(c_entry.fields.list[index].value)
+        return ret
 
-    def find(self, TagEntry entry, char* name, int options):
-        return ctagsFind(self.file, &entry.c_entry, name, options)
+    cdef first(self):
+        success = ctagsFirst(self.file, &self.c_entry)
+        if not success:
+            raise RuntimeError()
+        return self.create_tagEntry(&self.c_entry)
 
-    def findNext(self, TagEntry entry):
-        return ctagsFindNext(self.file, &entry.c_entry)
+    cdef find(self, bytes name, int options):
+        success = ctagsFind(self.file, &self.c_entry, name, options)
+        if not success:
+            raise RuntimeError()
+        return self.create_tagEntry(&self.c_entry)
 
-    def next(self, TagEntry entry):
-        return ctagsNext(self.file, &entry.c_entry)
+    cdef findNext(self):
+        success = ctagsFindNext(self.file, &self.c_entry)
+        if not success:
+            raise RuntimeError()
+        return self.create_tagEntry(&self.c_entry)
+
+    cdef next(self):
+        success = ctagsNext(self.file, &self.c_entry)
+        if not success:
+            raise RuntimeError()
+        return self.create_tagEntry(&self.c_entry)
+
+    def find_tags(self, name, int options):
+        """ Find tags corresponding to name in the tag file.
+            @name : a bytes array to search to.
+            @options : A option flags for the search.
+            @return : A iterator on all tags corresponding to the search.
+
+            WARNING: Only one iterator can run on a tag file.
+            If you use another iterator (by calling all_tags or find_tags),
+            any previous iterator will be invalidated and raise a RuntimeError.
+        """
+        if isinstance(name, unicode):
+            if self.encoding is None:
+                raise ValueError("%r is a unicode string and you do not provide"
+                                 "a encoding"%name)
+            name = (<unicode>name).encode(self.encoding)
+        try:
+            first = self.find(name, options)
+            self.current_id = first
+            yield first
+        except RuntimeError:
+            raise StopIteration from None
+
+        while True:
+            if self.current_id is not first:
+                raise RuntimeError("Only one search/list generator at a time")
+            try:
+                other = self.findNext()
+            except RuntimeError:
+                raise StopIteration from None
+            else:
+                yield other
+
+    def all_tags(self):
+        """ List all tags in the tag file.
+            @return : A iterator on all tags in the file.
+
+            WARNING: Only one iterator can run on a tag file.
+            If you use another iterator (by calling all_tags or find_tags),
+            any previous iterator will be invalidated and raise a RuntimeError.
+        """
+        try:
+            first = self.first()
+            self.current_id = first
+            yield first
+        except RuntimeError:
+            raise StopIteration from None
+
+        while True:
+            if self.current_id is not first:
+                raise RuntimeError("Only one search/list generator at a time")
+            try:
+                other = self.next()
+            except RuntimeError:
+                raise StopIteration from None
+            else:
+                yield other
 
