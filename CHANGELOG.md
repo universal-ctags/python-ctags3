@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 1.5.0
+- Support for str (rather than just bytes) file names
+
 ## Version 1.4.0
 - Python 3.9, 3.8 support (Louis Sautier)
 
