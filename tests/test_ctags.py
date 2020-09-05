@@ -10,7 +10,7 @@ import ctags
 class TestCTagsParse(TestCase):
     def setUp(self):
         file_path = os.path.join(src_dir, 'examples', 'tags')
-        self.ctags = ctags.CTags(file_path.encode(sys.getfilesystemencoding()))
+        self.ctags = ctags.CTags(file_path)
     def test_tag_entry(self):
         entry = ctags.TagEntry()
         self.ctags.setSortType(ctags.TAG_SORTED)
@@ -34,3 +34,8 @@ class TestCTagsParse(TestCase):
                 [b'../readtags.c', b'find', b'/^static tagResult find (tagFile '
                 b'*const file, tagEntry *const entry,$/', b'function', b'C']
         )
+
+class TestCTagsParseBytes(TestCTagsParse):
+    def setUp(self):
+        file_path = os.path.join(src_dir, 'examples', 'tags')
+        self.ctags = ctags.CTags(file_path.encode(sys.getfilesystemencoding()))

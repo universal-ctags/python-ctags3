@@ -16,7 +16,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Python-Ctags.  If not, see <http://www.gnu.org/licenses/>.
 """
-
+import sys
 
 include "stdlib.pxi"
 include "readtags.pxi"
@@ -124,6 +124,9 @@ cdef class CTags:
 
 
     def open(self, filepath):
+        if isinstance(filepath, str):
+            filepath = filepath.encode(sys.getfilesystemencoding())
+
         self.file = ctagsOpen(filepath, &self.info)
 
         if not self.info.status.opened:

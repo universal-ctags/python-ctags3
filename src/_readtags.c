@@ -1100,6 +1100,53 @@ static int __Pyx_ParseOptionalKeywords(PyObject *kwds, PyObject **argnames[],\
 /* PyObjectCall2Args.proto */
 static CYTHON_UNUSED PyObject* __Pyx_PyObject_Call2Args(PyObject* function, PyObject* arg1, PyObject* arg2);
 
+/* PyDictVersioning.proto */
+#if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
+#define __PYX_DICT_VERSION_INIT  ((PY_UINT64_T) -1)
+#define __PYX_GET_DICT_VERSION(dict)  (((PyDictObject*)(dict))->ma_version_tag)
+#define __PYX_UPDATE_DICT_CACHE(dict, value, cache_var, version_var)\
+    (version_var) = __PYX_GET_DICT_VERSION(dict);\
+    (cache_var) = (value);
+#define __PYX_PY_DICT_LOOKUP_IF_MODIFIED(VAR, DICT, LOOKUP) {\
+    static PY_UINT64_T __pyx_dict_version = 0;\
+    static PyObject *__pyx_dict_cached_value = NULL;\
+    if (likely(__PYX_GET_DICT_VERSION(DICT) == __pyx_dict_version)) {\
+        (VAR) = __pyx_dict_cached_value;\
+    } else {\
+        (VAR) = __pyx_dict_cached_value = (LOOKUP);\
+        __pyx_dict_version = __PYX_GET_DICT_VERSION(DICT);\
+    }\
+}
+static CYTHON_INLINE PY_UINT64_T __Pyx_get_tp_dict_version(PyObject *obj);
+static CYTHON_INLINE PY_UINT64_T __Pyx_get_object_dict_version(PyObject *obj);
+static CYTHON_INLINE int __Pyx_object_dict_version_matches(PyObject* obj, PY_UINT64_T tp_dict_version, PY_UINT64_T obj_dict_version);
+#else
+#define __PYX_GET_DICT_VERSION(dict)  (0)
+#define __PYX_UPDATE_DICT_CACHE(dict, value, cache_var, version_var)
+#define __PYX_PY_DICT_LOOKUP_IF_MODIFIED(VAR, DICT, LOOKUP)  (VAR) = (LOOKUP);
+#endif
+
+/* GetModuleGlobalName.proto */
+#if CYTHON_USE_DICT_VERSIONS
+#define __Pyx_GetModuleGlobalName(var, name)  {\
+    static PY_UINT64_T __pyx_dict_version = 0;\
+    static PyObject *__pyx_dict_cached_value = NULL;\
+    (var) = (likely(__pyx_dict_version == __PYX_GET_DICT_VERSION(__pyx_d))) ?\
+        (likely(__pyx_dict_cached_value) ? __Pyx_NewRef(__pyx_dict_cached_value) : __Pyx_GetBuiltinName(name)) :\
+        __Pyx__GetModuleGlobalName(name, &__pyx_dict_version, &__pyx_dict_cached_value);\
+}
+#define __Pyx_GetModuleGlobalNameUncached(var, name)  {\
+    PY_UINT64_T __pyx_dict_version;\
+    PyObject *__pyx_dict_cached_value;\
+    (var) = __Pyx__GetModuleGlobalName(name, &__pyx_dict_version, &__pyx_dict_cached_value);\
+}
+static PyObject *__Pyx__GetModuleGlobalName(PyObject *name, PY_UINT64_T *dict_version, PyObject **dict_cached_value);
+#else
+#define __Pyx_GetModuleGlobalName(var, name)  (var) = __Pyx__GetModuleGlobalName(name)
+#define __Pyx_GetModuleGlobalNameUncached(var, name)  (var) = __Pyx__GetModuleGlobalName(name)
+static CYTHON_INLINE PyObject *__Pyx__GetModuleGlobalName(PyObject *name);
+#endif
+
 /* ArgTypeTest.proto */
 #define __Pyx_ArgTypeTest(obj, type, none_allowed, name, exact)\
     ((likely((Py_TYPE(obj) == type) | (none_allowed && (obj == Py_None)))) ? 1 :\
@@ -1134,31 +1181,8 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStrNoError(PyObject* obj, P
 /* SetupReduce.proto */
 static int __Pyx_setup_reduce(PyObject* type_obj);
 
-/* PyDictVersioning.proto */
-#if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
-#define __PYX_DICT_VERSION_INIT  ((PY_UINT64_T) -1)
-#define __PYX_GET_DICT_VERSION(dict)  (((PyDictObject*)(dict))->ma_version_tag)
-#define __PYX_UPDATE_DICT_CACHE(dict, value, cache_var, version_var)\
-    (version_var) = __PYX_GET_DICT_VERSION(dict);\
-    (cache_var) = (value);
-#define __PYX_PY_DICT_LOOKUP_IF_MODIFIED(VAR, DICT, LOOKUP) {\
-    static PY_UINT64_T __pyx_dict_version = 0;\
-    static PyObject *__pyx_dict_cached_value = NULL;\
-    if (likely(__PYX_GET_DICT_VERSION(DICT) == __pyx_dict_version)) {\
-        (VAR) = __pyx_dict_cached_value;\
-    } else {\
-        (VAR) = __pyx_dict_cached_value = (LOOKUP);\
-        __pyx_dict_version = __PYX_GET_DICT_VERSION(DICT);\
-    }\
-}
-static CYTHON_INLINE PY_UINT64_T __Pyx_get_tp_dict_version(PyObject *obj);
-static CYTHON_INLINE PY_UINT64_T __Pyx_get_object_dict_version(PyObject *obj);
-static CYTHON_INLINE int __Pyx_object_dict_version_matches(PyObject* obj, PY_UINT64_T tp_dict_version, PY_UINT64_T obj_dict_version);
-#else
-#define __PYX_GET_DICT_VERSION(dict)  (0)
-#define __PYX_UPDATE_DICT_CACHE(dict, value, cache_var, version_var)
-#define __PYX_PY_DICT_LOOKUP_IF_MODIFIED(VAR, DICT, LOOKUP)  (VAR) = (LOOKUP);
-#endif
+/* Import.proto */
+static PyObject *__Pyx_Import(PyObject *name, PyObject *from_list, int level);
 
 /* CLineInTraceback.proto */
 #ifdef CYTHON_CLINE_IN_TRACEBACK
@@ -1249,6 +1273,7 @@ int __pyx_module_is_main__readtags = 0;
 /* Implementation of '_readtags' */
 static PyObject *__pyx_builtin_TypeError;
 static const char __pyx_k__3[] = "";
+static const char __pyx_k_sys[] = "sys";
 static const char __pyx_k_url[] = "url";
 static const char __pyx_k_file[] = "file";
 static const char __pyx_k_kind[] = "kind";
@@ -1260,8 +1285,10 @@ static const char __pyx_k_test[] = "__test__";
 static const char __pyx_k_CTags[] = "CTags";
 static const char __pyx_k_entry[] = "entry";
 static const char __pyx_k_author[] = "author";
+static const char __pyx_k_encode[] = "encode";
 static const char __pyx_k_fields[] = "fields";
 static const char __pyx_k_format[] = "format";
+static const char __pyx_k_import[] = "__import__";
 static const char __pyx_k_name_2[] = "__name__";
 static const char __pyx_k_opened[] = "opened";
 static const char __pyx_k_reduce[] = "__reduce__";
@@ -1282,6 +1309,7 @@ static const char __pyx_k_reduce_cython[] = "__reduce_cython__";
 static const char __pyx_k_setstate_cython[] = "__setstate_cython__";
 static const char __pyx_k_Invalid_tag_file[] = "Invalid tag file";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
+static const char __pyx_k_getfilesystemencoding[] = "getfilesystemencoding";
 static const char __pyx_k_Id_This_file_is_part_of_Python[] = "\n$Id$\n\nThis file is part of Python-Ctags.\n\nPython-Ctags is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nPython-Ctags is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with Python-Ctags.  If not, see <http://www.gnu.org/licenses/>.\n";
 static const char __pyx_k_no_default___reduce___due_to_non[] = "no default __reduce__ due to non-trivial __cinit__";
 static PyObject *__pyx_n_s_CTags;
@@ -1291,6 +1319,7 @@ static PyObject *__pyx_n_s_TypeError;
 static PyObject *__pyx_kp_s__3;
 static PyObject *__pyx_n_s_author;
 static PyObject *__pyx_n_s_cline_in_traceback;
+static PyObject *__pyx_n_s_encode;
 static PyObject *__pyx_n_s_entry;
 static PyObject *__pyx_n_s_error_number;
 static PyObject *__pyx_n_s_fields;
@@ -1298,7 +1327,9 @@ static PyObject *__pyx_n_s_file;
 static PyObject *__pyx_n_s_fileScope;
 static PyObject *__pyx_n_s_filepath;
 static PyObject *__pyx_n_s_format;
+static PyObject *__pyx_n_s_getfilesystemencoding;
 static PyObject *__pyx_n_s_getstate;
+static PyObject *__pyx_n_s_import;
 static PyObject *__pyx_n_s_iteritems;
 static PyObject *__pyx_n_s_kind;
 static PyObject *__pyx_n_s_lineNumber;
@@ -1316,6 +1347,7 @@ static PyObject *__pyx_n_s_reduce_ex;
 static PyObject *__pyx_n_s_setstate;
 static PyObject *__pyx_n_s_setstate_cython;
 static PyObject *__pyx_n_s_sort;
+static PyObject *__pyx_n_s_sys;
 static PyObject *__pyx_n_s_test;
 static PyObject *__pyx_n_s_url;
 static PyObject *__pyx_n_s_version;
@@ -2907,8 +2939,8 @@ static PyObject *__pyx_pf_9_readtags_5CTags_4__getitem__(struct __pyx_obj_9_read
  * 
  * 
  *     def open(self, filepath):             # <<<<<<<<<<<<<<
- *         self.file = ctagsOpen(filepath, &self.info)
- * 
+ *         if isinstance(filepath, str):
+ *             filepath = filepath.encode(sys.getfilesystemencoding())
  */
 
 /* Python wrapper */
@@ -2927,25 +2959,99 @@ static PyObject *__pyx_pw_9_readtags_5CTags_7open(PyObject *__pyx_v_self, PyObje
 static PyObject *__pyx_pf_9_readtags_5CTags_6open(struct __pyx_obj_9_readtags_CTags *__pyx_v_self, PyObject *__pyx_v_filepath) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
-  char *__pyx_t_1;
+  int __pyx_t_1;
   int __pyx_t_2;
   PyObject *__pyx_t_3 = NULL;
+  PyObject *__pyx_t_4 = NULL;
+  PyObject *__pyx_t_5 = NULL;
+  PyObject *__pyx_t_6 = NULL;
+  PyObject *__pyx_t_7 = NULL;
+  char *__pyx_t_8;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("open", 0);
+  __Pyx_INCREF(__pyx_v_filepath);
 
   /* "_readtags.pyx":127
  * 
  *     def open(self, filepath):
+ *         if isinstance(filepath, str):             # <<<<<<<<<<<<<<
+ *             filepath = filepath.encode(sys.getfilesystemencoding())
+ *         self.file = ctagsOpen(filepath, &self.info)
+ */
+  __pyx_t_1 = PyString_Check(__pyx_v_filepath); 
+  __pyx_t_2 = (__pyx_t_1 != 0);
+  if (__pyx_t_2) {
+
+    /* "_readtags.pyx":128
+ *     def open(self, filepath):
+ *         if isinstance(filepath, str):
+ *             filepath = filepath.encode(sys.getfilesystemencoding())             # <<<<<<<<<<<<<<
+ *         self.file = ctagsOpen(filepath, &self.info)
+ * 
+ */
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_filepath, __pyx_n_s_encode); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 128, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_sys); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 128, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_6);
+    __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_getfilesystemencoding); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 128, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_7);
+    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    __pyx_t_6 = NULL;
+    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_7))) {
+      __pyx_t_6 = PyMethod_GET_SELF(__pyx_t_7);
+      if (likely(__pyx_t_6)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_7);
+        __Pyx_INCREF(__pyx_t_6);
+        __Pyx_INCREF(function);
+        __Pyx_DECREF_SET(__pyx_t_7, function);
+      }
+    }
+    __pyx_t_5 = (__pyx_t_6) ? __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_t_6) : __Pyx_PyObject_CallNoArg(__pyx_t_7);
+    __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
+    if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 128, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+    __pyx_t_7 = NULL;
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
+      __pyx_t_7 = PyMethod_GET_SELF(__pyx_t_4);
+      if (likely(__pyx_t_7)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
+        __Pyx_INCREF(__pyx_t_7);
+        __Pyx_INCREF(function);
+        __Pyx_DECREF_SET(__pyx_t_4, function);
+      }
+    }
+    __pyx_t_3 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_7, __pyx_t_5) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5);
+    __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 128, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __Pyx_DECREF_SET(__pyx_v_filepath, __pyx_t_3);
+    __pyx_t_3 = 0;
+
+    /* "_readtags.pyx":127
+ * 
+ *     def open(self, filepath):
+ *         if isinstance(filepath, str):             # <<<<<<<<<<<<<<
+ *             filepath = filepath.encode(sys.getfilesystemencoding())
+ *         self.file = ctagsOpen(filepath, &self.info)
+ */
+  }
+
+  /* "_readtags.pyx":129
+ *         if isinstance(filepath, str):
+ *             filepath = filepath.encode(sys.getfilesystemencoding())
  *         self.file = ctagsOpen(filepath, &self.info)             # <<<<<<<<<<<<<<
  * 
  *         if not self.info.status.opened:
  */
-  __pyx_t_1 = __Pyx_PyObject_AsWritableString(__pyx_v_filepath); if (unlikely((!__pyx_t_1) && PyErr_Occurred())) __PYX_ERR(1, 127, __pyx_L1_error)
-  __pyx_v_self->file = tagsOpen(__pyx_t_1, (&__pyx_v_self->info));
+  __pyx_t_8 = __Pyx_PyObject_AsWritableString(__pyx_v_filepath); if (unlikely((!__pyx_t_8) && PyErr_Occurred())) __PYX_ERR(1, 129, __pyx_L1_error)
+  __pyx_v_self->file = tagsOpen(__pyx_t_8, (&__pyx_v_self->info));
 
-  /* "_readtags.pyx":129
+  /* "_readtags.pyx":131
  *         self.file = ctagsOpen(filepath, &self.info)
  * 
  *         if not self.info.status.opened:             # <<<<<<<<<<<<<<
@@ -2955,20 +3061,20 @@ static PyObject *__pyx_pf_9_readtags_5CTags_6open(struct __pyx_obj_9_readtags_CT
   __pyx_t_2 = ((!(__pyx_v_self->info.status.opened != 0)) != 0);
   if (unlikely(__pyx_t_2)) {
 
-    /* "_readtags.pyx":130
+    /* "_readtags.pyx":132
  * 
  *         if not self.info.status.opened:
  *             raise Exception('Invalid tag file')             # <<<<<<<<<<<<<<
  * 
  *     def setSortType(self, tagSortType type):
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])), __pyx_tuple__4, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 130, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])), __pyx_tuple__4, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 132, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __PYX_ERR(1, 130, __pyx_L1_error)
+    __PYX_ERR(1, 132, __pyx_L1_error)
 
-    /* "_readtags.pyx":129
+    /* "_readtags.pyx":131
  *         self.file = ctagsOpen(filepath, &self.info)
  * 
  *         if not self.info.status.opened:             # <<<<<<<<<<<<<<
@@ -2981,8 +3087,8 @@ static PyObject *__pyx_pf_9_readtags_5CTags_6open(struct __pyx_obj_9_readtags_CT
  * 
  * 
  *     def open(self, filepath):             # <<<<<<<<<<<<<<
- *         self.file = ctagsOpen(filepath, &self.info)
- * 
+ *         if isinstance(filepath, str):
+ *             filepath = filepath.encode(sys.getfilesystemencoding())
  */
 
   /* function exit code */
@@ -2990,15 +3096,20 @@ static PyObject *__pyx_pf_9_readtags_5CTags_6open(struct __pyx_obj_9_readtags_CT
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_XDECREF(__pyx_t_6);
+  __Pyx_XDECREF(__pyx_t_7);
   __Pyx_AddTraceback("_readtags.CTags.open", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
+  __Pyx_XDECREF(__pyx_v_filepath);
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "_readtags.pyx":132
+/* "_readtags.pyx":134
  *             raise Exception('Invalid tag file')
  * 
  *     def setSortType(self, tagSortType type):             # <<<<<<<<<<<<<<
@@ -3017,7 +3128,7 @@ static PyObject *__pyx_pw_9_readtags_5CTags_9setSortType(PyObject *__pyx_v_self,
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("setSortType (wrapper)", 0);
   assert(__pyx_arg_type); {
-    __pyx_v_type = ((sortType)__Pyx_PyInt_As_sortType(__pyx_arg_type)); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 132, __pyx_L3_error)
+    __pyx_v_type = ((sortType)__Pyx_PyInt_As_sortType(__pyx_arg_type)); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 134, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -3041,7 +3152,7 @@ static PyObject *__pyx_pf_9_readtags_5CTags_8setSortType(struct __pyx_obj_9_read
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("setSortType", 0);
 
-  /* "_readtags.pyx":133
+  /* "_readtags.pyx":135
  * 
  *     def setSortType(self, tagSortType type):
  *         return ctagsSetSortType(self.file, type)             # <<<<<<<<<<<<<<
@@ -3049,13 +3160,13 @@ static PyObject *__pyx_pf_9_readtags_5CTags_8setSortType(struct __pyx_obj_9_read
  *     def first(self, TagEntry entry):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_tagResult(tagsSetSortType(__pyx_v_self->file, __pyx_v_type)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 133, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_tagResult(tagsSetSortType(__pyx_v_self->file, __pyx_v_type)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 135, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "_readtags.pyx":132
+  /* "_readtags.pyx":134
  *             raise Exception('Invalid tag file')
  * 
  *     def setSortType(self, tagSortType type):             # <<<<<<<<<<<<<<
@@ -3074,7 +3185,7 @@ static PyObject *__pyx_pf_9_readtags_5CTags_8setSortType(struct __pyx_obj_9_read
   return __pyx_r;
 }
 
-/* "_readtags.pyx":135
+/* "_readtags.pyx":137
  *         return ctagsSetSortType(self.file, type)
  * 
  *     def first(self, TagEntry entry):             # <<<<<<<<<<<<<<
@@ -3091,7 +3202,7 @@ static PyObject *__pyx_pw_9_readtags_5CTags_11first(PyObject *__pyx_v_self, PyOb
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("first (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_entry), __pyx_ptype_9_readtags_TagEntry, 1, "entry", 0))) __PYX_ERR(1, 135, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_entry), __pyx_ptype_9_readtags_TagEntry, 1, "entry", 0))) __PYX_ERR(1, 137, __pyx_L1_error)
   __pyx_r = __pyx_pf_9_readtags_5CTags_10first(((struct __pyx_obj_9_readtags_CTags *)__pyx_v_self), ((struct __pyx_obj_9_readtags_TagEntry *)__pyx_v_entry));
 
   /* function exit code */
@@ -3112,7 +3223,7 @@ static PyObject *__pyx_pf_9_readtags_5CTags_10first(struct __pyx_obj_9_readtags_
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("first", 0);
 
-  /* "_readtags.pyx":136
+  /* "_readtags.pyx":138
  * 
  *     def first(self, TagEntry entry):
  *         return ctagsFirst(self.file, &entry.c_entry)             # <<<<<<<<<<<<<<
@@ -3120,13 +3231,13 @@ static PyObject *__pyx_pf_9_readtags_5CTags_10first(struct __pyx_obj_9_readtags_
  *     def find(self, TagEntry entry, char* name, int options):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_tagResult(tagsFirst(__pyx_v_self->file, (&__pyx_v_entry->c_entry))); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 136, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_tagResult(tagsFirst(__pyx_v_self->file, (&__pyx_v_entry->c_entry))); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 138, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "_readtags.pyx":135
+  /* "_readtags.pyx":137
  *         return ctagsSetSortType(self.file, type)
  * 
  *     def first(self, TagEntry entry):             # <<<<<<<<<<<<<<
@@ -3145,7 +3256,7 @@ static PyObject *__pyx_pf_9_readtags_5CTags_10first(struct __pyx_obj_9_readtags_
   return __pyx_r;
 }
 
-/* "_readtags.pyx":138
+/* "_readtags.pyx":140
  *         return ctagsFirst(self.file, &entry.c_entry)
  * 
  *     def find(self, TagEntry entry, char* name, int options):             # <<<<<<<<<<<<<<
@@ -3190,17 +3301,17 @@ static PyObject *__pyx_pw_9_readtags_5CTags_13find(PyObject *__pyx_v_self, PyObj
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_name)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("find", 1, 3, 3, 1); __PYX_ERR(1, 138, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("find", 1, 3, 3, 1); __PYX_ERR(1, 140, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_options)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("find", 1, 3, 3, 2); __PYX_ERR(1, 138, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("find", 1, 3, 3, 2); __PYX_ERR(1, 140, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "find") < 0)) __PYX_ERR(1, 138, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "find") < 0)) __PYX_ERR(1, 140, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
       goto __pyx_L5_argtuple_error;
@@ -3210,18 +3321,18 @@ static PyObject *__pyx_pw_9_readtags_5CTags_13find(PyObject *__pyx_v_self, PyObj
       values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
     }
     __pyx_v_entry = ((struct __pyx_obj_9_readtags_TagEntry *)values[0]);
-    __pyx_v_name = __Pyx_PyObject_AsWritableString(values[1]); if (unlikely((!__pyx_v_name) && PyErr_Occurred())) __PYX_ERR(1, 138, __pyx_L3_error)
-    __pyx_v_options = __Pyx_PyInt_As_int(values[2]); if (unlikely((__pyx_v_options == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 138, __pyx_L3_error)
+    __pyx_v_name = __Pyx_PyObject_AsWritableString(values[1]); if (unlikely((!__pyx_v_name) && PyErr_Occurred())) __PYX_ERR(1, 140, __pyx_L3_error)
+    __pyx_v_options = __Pyx_PyInt_As_int(values[2]); if (unlikely((__pyx_v_options == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 140, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("find", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 138, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("find", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 140, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("_readtags.CTags.find", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_entry), __pyx_ptype_9_readtags_TagEntry, 1, "entry", 0))) __PYX_ERR(1, 138, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_entry), __pyx_ptype_9_readtags_TagEntry, 1, "entry", 0))) __PYX_ERR(1, 140, __pyx_L1_error)
   __pyx_r = __pyx_pf_9_readtags_5CTags_12find(((struct __pyx_obj_9_readtags_CTags *)__pyx_v_self), __pyx_v_entry, __pyx_v_name, __pyx_v_options);
 
   /* function exit code */
@@ -3242,7 +3353,7 @@ static PyObject *__pyx_pf_9_readtags_5CTags_12find(struct __pyx_obj_9_readtags_C
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("find", 0);
 
-  /* "_readtags.pyx":139
+  /* "_readtags.pyx":141
  * 
  *     def find(self, TagEntry entry, char* name, int options):
  *         return ctagsFind(self.file, &entry.c_entry, name, options)             # <<<<<<<<<<<<<<
@@ -3250,13 +3361,13 @@ static PyObject *__pyx_pf_9_readtags_5CTags_12find(struct __pyx_obj_9_readtags_C
  *     def findNext(self, TagEntry entry):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_tagResult(tagsFind(__pyx_v_self->file, (&__pyx_v_entry->c_entry), __pyx_v_name, __pyx_v_options)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 139, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_tagResult(tagsFind(__pyx_v_self->file, (&__pyx_v_entry->c_entry), __pyx_v_name, __pyx_v_options)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 141, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "_readtags.pyx":138
+  /* "_readtags.pyx":140
  *         return ctagsFirst(self.file, &entry.c_entry)
  * 
  *     def find(self, TagEntry entry, char* name, int options):             # <<<<<<<<<<<<<<
@@ -3275,7 +3386,7 @@ static PyObject *__pyx_pf_9_readtags_5CTags_12find(struct __pyx_obj_9_readtags_C
   return __pyx_r;
 }
 
-/* "_readtags.pyx":141
+/* "_readtags.pyx":143
  *         return ctagsFind(self.file, &entry.c_entry, name, options)
  * 
  *     def findNext(self, TagEntry entry):             # <<<<<<<<<<<<<<
@@ -3292,7 +3403,7 @@ static PyObject *__pyx_pw_9_readtags_5CTags_15findNext(PyObject *__pyx_v_self, P
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("findNext (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_entry), __pyx_ptype_9_readtags_TagEntry, 1, "entry", 0))) __PYX_ERR(1, 141, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_entry), __pyx_ptype_9_readtags_TagEntry, 1, "entry", 0))) __PYX_ERR(1, 143, __pyx_L1_error)
   __pyx_r = __pyx_pf_9_readtags_5CTags_14findNext(((struct __pyx_obj_9_readtags_CTags *)__pyx_v_self), ((struct __pyx_obj_9_readtags_TagEntry *)__pyx_v_entry));
 
   /* function exit code */
@@ -3313,7 +3424,7 @@ static PyObject *__pyx_pf_9_readtags_5CTags_14findNext(struct __pyx_obj_9_readta
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("findNext", 0);
 
-  /* "_readtags.pyx":142
+  /* "_readtags.pyx":144
  * 
  *     def findNext(self, TagEntry entry):
  *         return ctagsFindNext(self.file, &entry.c_entry)             # <<<<<<<<<<<<<<
@@ -3321,13 +3432,13 @@ static PyObject *__pyx_pf_9_readtags_5CTags_14findNext(struct __pyx_obj_9_readta
  *     def next(self, TagEntry entry):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_tagResult(tagsFindNext(__pyx_v_self->file, (&__pyx_v_entry->c_entry))); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 142, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_tagResult(tagsFindNext(__pyx_v_self->file, (&__pyx_v_entry->c_entry))); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 144, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "_readtags.pyx":141
+  /* "_readtags.pyx":143
  *         return ctagsFind(self.file, &entry.c_entry, name, options)
  * 
  *     def findNext(self, TagEntry entry):             # <<<<<<<<<<<<<<
@@ -3346,7 +3457,7 @@ static PyObject *__pyx_pf_9_readtags_5CTags_14findNext(struct __pyx_obj_9_readta
   return __pyx_r;
 }
 
-/* "_readtags.pyx":144
+/* "_readtags.pyx":146
  *         return ctagsFindNext(self.file, &entry.c_entry)
  * 
  *     def next(self, TagEntry entry):             # <<<<<<<<<<<<<<
@@ -3363,7 +3474,7 @@ static PyObject *__pyx_pw_9_readtags_5CTags_17next(PyObject *__pyx_v_self, PyObj
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("next (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_entry), __pyx_ptype_9_readtags_TagEntry, 1, "entry", 0))) __PYX_ERR(1, 144, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_entry), __pyx_ptype_9_readtags_TagEntry, 1, "entry", 0))) __PYX_ERR(1, 146, __pyx_L1_error)
   __pyx_r = __pyx_pf_9_readtags_5CTags_16next(((struct __pyx_obj_9_readtags_CTags *)__pyx_v_self), ((struct __pyx_obj_9_readtags_TagEntry *)__pyx_v_entry));
 
   /* function exit code */
@@ -3384,20 +3495,20 @@ static PyObject *__pyx_pf_9_readtags_5CTags_16next(struct __pyx_obj_9_readtags_C
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("next", 0);
 
-  /* "_readtags.pyx":145
+  /* "_readtags.pyx":147
  * 
  *     def next(self, TagEntry entry):
  *         return ctagsNext(self.file, &entry.c_entry)             # <<<<<<<<<<<<<<
  * 
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_tagResult(tagsNext(__pyx_v_self->file, (&__pyx_v_entry->c_entry))); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 145, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_tagResult(tagsNext(__pyx_v_self->file, (&__pyx_v_entry->c_entry))); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 147, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "_readtags.pyx":144
+  /* "_readtags.pyx":146
  *         return ctagsFindNext(self.file, &entry.c_entry)
  * 
  *     def next(self, TagEntry entry):             # <<<<<<<<<<<<<<
@@ -3857,6 +3968,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s__3, __pyx_k__3, sizeof(__pyx_k__3), 0, 0, 1, 0},
   {&__pyx_n_s_author, __pyx_k_author, sizeof(__pyx_k_author), 0, 0, 1, 1},
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
+  {&__pyx_n_s_encode, __pyx_k_encode, sizeof(__pyx_k_encode), 0, 0, 1, 1},
   {&__pyx_n_s_entry, __pyx_k_entry, sizeof(__pyx_k_entry), 0, 0, 1, 1},
   {&__pyx_n_s_error_number, __pyx_k_error_number, sizeof(__pyx_k_error_number), 0, 0, 1, 1},
   {&__pyx_n_s_fields, __pyx_k_fields, sizeof(__pyx_k_fields), 0, 0, 1, 1},
@@ -3864,7 +3976,9 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_fileScope, __pyx_k_fileScope, sizeof(__pyx_k_fileScope), 0, 0, 1, 1},
   {&__pyx_n_s_filepath, __pyx_k_filepath, sizeof(__pyx_k_filepath), 0, 0, 1, 1},
   {&__pyx_n_s_format, __pyx_k_format, sizeof(__pyx_k_format), 0, 0, 1, 1},
+  {&__pyx_n_s_getfilesystemencoding, __pyx_k_getfilesystemencoding, sizeof(__pyx_k_getfilesystemencoding), 0, 0, 1, 1},
   {&__pyx_n_s_getstate, __pyx_k_getstate, sizeof(__pyx_k_getstate), 0, 0, 1, 1},
+  {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
   {&__pyx_n_s_iteritems, __pyx_k_iteritems, sizeof(__pyx_k_iteritems), 0, 0, 1, 1},
   {&__pyx_n_s_kind, __pyx_k_kind, sizeof(__pyx_k_kind), 0, 0, 1, 1},
   {&__pyx_n_s_lineNumber, __pyx_k_lineNumber, sizeof(__pyx_k_lineNumber), 0, 0, 1, 1},
@@ -3882,6 +3996,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_setstate, __pyx_k_setstate, sizeof(__pyx_k_setstate), 0, 0, 1, 1},
   {&__pyx_n_s_setstate_cython, __pyx_k_setstate_cython, sizeof(__pyx_k_setstate_cython), 0, 0, 1, 1},
   {&__pyx_n_s_sort, __pyx_k_sort, sizeof(__pyx_k_sort), 0, 0, 1, 1},
+  {&__pyx_n_s_sys, __pyx_k_sys, sizeof(__pyx_k_sys), 0, 0, 1, 1},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
   {&__pyx_n_s_url, __pyx_k_url, sizeof(__pyx_k_url), 0, 0, 1, 1},
   {&__pyx_n_s_version, __pyx_k_version, sizeof(__pyx_k_version), 0, 0, 1, 1},
@@ -3917,14 +4032,14 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__2);
   __Pyx_GIVEREF(__pyx_tuple__2);
 
-  /* "_readtags.pyx":130
+  /* "_readtags.pyx":132
  * 
  *         if not self.info.status.opened:
  *             raise Exception('Invalid tag file')             # <<<<<<<<<<<<<<
  * 
  *     def setSortType(self, tagSortType type):
  */
-  __pyx_tuple__4 = PyTuple_Pack(1, __pyx_kp_s_Invalid_tag_file); if (unlikely(!__pyx_tuple__4)) __PYX_ERR(1, 130, __pyx_L1_error)
+  __pyx_tuple__4 = PyTuple_Pack(1, __pyx_kp_s_Invalid_tag_file); if (unlikely(!__pyx_tuple__4)) __PYX_ERR(1, 132, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__4);
   __Pyx_GIVEREF(__pyx_tuple__4);
 
@@ -4251,6 +4366,18 @@ if (!__Pyx_RefNanny) {
   #if defined(__Pyx_Generator_USED) || defined(__Pyx_Coroutine_USED)
   if (__Pyx_patch_abc() < 0) __PYX_ERR(1, 1, __pyx_L1_error)
   #endif
+
+  /* "_readtags.pyx":19
+ * along with Python-Ctags.  If not, see <http://www.gnu.org/licenses/>.
+ * """
+ * import sys             # <<<<<<<<<<<<<<
+ * 
+ * include "stdlib.pxi"
+ */
+  __pyx_t_1 = __Pyx_Import(__pyx_n_s_sys, 0, -1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 19, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_sys, __pyx_t_1) < 0) __PYX_ERR(1, 19, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "_readtags.pyx":1
  * """             # <<<<<<<<<<<<<<
@@ -5472,6 +5599,67 @@ done:
     return result;
 }
 
+/* PyDictVersioning */
+#if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
+static CYTHON_INLINE PY_UINT64_T __Pyx_get_tp_dict_version(PyObject *obj) {
+    PyObject *dict = Py_TYPE(obj)->tp_dict;
+    return likely(dict) ? __PYX_GET_DICT_VERSION(dict) : 0;
+}
+static CYTHON_INLINE PY_UINT64_T __Pyx_get_object_dict_version(PyObject *obj) {
+    PyObject **dictptr = NULL;
+    Py_ssize_t offset = Py_TYPE(obj)->tp_dictoffset;
+    if (offset) {
+#if CYTHON_COMPILING_IN_CPYTHON
+        dictptr = (likely(offset > 0)) ? (PyObject **) ((char *)obj + offset) : _PyObject_GetDictPtr(obj);
+#else
+        dictptr = _PyObject_GetDictPtr(obj);
+#endif
+    }
+    return (dictptr && *dictptr) ? __PYX_GET_DICT_VERSION(*dictptr) : 0;
+}
+static CYTHON_INLINE int __Pyx_object_dict_version_matches(PyObject* obj, PY_UINT64_T tp_dict_version, PY_UINT64_T obj_dict_version) {
+    PyObject *dict = Py_TYPE(obj)->tp_dict;
+    if (unlikely(!dict) || unlikely(tp_dict_version != __PYX_GET_DICT_VERSION(dict)))
+        return 0;
+    return obj_dict_version == __Pyx_get_object_dict_version(obj);
+}
+#endif
+
+/* GetModuleGlobalName */
+#if CYTHON_USE_DICT_VERSIONS
+static PyObject *__Pyx__GetModuleGlobalName(PyObject *name, PY_UINT64_T *dict_version, PyObject **dict_cached_value)
+#else
+static CYTHON_INLINE PyObject *__Pyx__GetModuleGlobalName(PyObject *name)
+#endif
+{
+    PyObject *result;
+#if !CYTHON_AVOID_BORROWED_REFS
+#if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030500A1
+    result = _PyDict_GetItem_KnownHash(__pyx_d, name, ((PyASCIIObject *) name)->hash);
+    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
+    if (likely(result)) {
+        return __Pyx_NewRef(result);
+    } else if (unlikely(PyErr_Occurred())) {
+        return NULL;
+    }
+#else
+    result = PyDict_GetItem(__pyx_d, name);
+    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
+    if (likely(result)) {
+        return __Pyx_NewRef(result);
+    }
+#endif
+#else
+    result = PyObject_GetItem(__pyx_d, name);
+    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
+    if (likely(result)) {
+        return __Pyx_NewRef(result);
+    }
+    PyErr_Clear();
+#endif
+    return __Pyx_GetBuiltinName(name);
+}
+
 /* ArgTypeTest */
 static int __Pyx__ArgTypeTest(PyObject *obj, PyTypeObject *type, const char *name, int exact)
 {
@@ -5674,31 +5862,70 @@ __PYX_GOOD:
     return ret;
 }
 
-/* PyDictVersioning */
-#if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
-static CYTHON_INLINE PY_UINT64_T __Pyx_get_tp_dict_version(PyObject *obj) {
-    PyObject *dict = Py_TYPE(obj)->tp_dict;
-    return likely(dict) ? __PYX_GET_DICT_VERSION(dict) : 0;
-}
-static CYTHON_INLINE PY_UINT64_T __Pyx_get_object_dict_version(PyObject *obj) {
-    PyObject **dictptr = NULL;
-    Py_ssize_t offset = Py_TYPE(obj)->tp_dictoffset;
-    if (offset) {
-#if CYTHON_COMPILING_IN_CPYTHON
-        dictptr = (likely(offset > 0)) ? (PyObject **) ((char *)obj + offset) : _PyObject_GetDictPtr(obj);
-#else
-        dictptr = _PyObject_GetDictPtr(obj);
-#endif
+/* Import */
+static PyObject *__Pyx_Import(PyObject *name, PyObject *from_list, int level) {
+    PyObject *empty_list = 0;
+    PyObject *module = 0;
+    PyObject *global_dict = 0;
+    PyObject *empty_dict = 0;
+    PyObject *list;
+    #if PY_MAJOR_VERSION < 3
+    PyObject *py_import;
+    py_import = __Pyx_PyObject_GetAttrStr(__pyx_b, __pyx_n_s_import);
+    if (!py_import)
+        goto bad;
+    #endif
+    if (from_list)
+        list = from_list;
+    else {
+        empty_list = PyList_New(0);
+        if (!empty_list)
+            goto bad;
+        list = empty_list;
     }
-    return (dictptr && *dictptr) ? __PYX_GET_DICT_VERSION(*dictptr) : 0;
+    global_dict = PyModule_GetDict(__pyx_m);
+    if (!global_dict)
+        goto bad;
+    empty_dict = PyDict_New();
+    if (!empty_dict)
+        goto bad;
+    {
+        #if PY_MAJOR_VERSION >= 3
+        if (level == -1) {
+            if ((1) && (strchr(__Pyx_MODULE_NAME, '.'))) {
+                module = PyImport_ImportModuleLevelObject(
+                    name, global_dict, empty_dict, list, 1);
+                if (!module) {
+                    if (!PyErr_ExceptionMatches(PyExc_ImportError))
+                        goto bad;
+                    PyErr_Clear();
+                }
+            }
+            level = 0;
+        }
+        #endif
+        if (!module) {
+            #if PY_MAJOR_VERSION < 3
+            PyObject *py_level = PyInt_FromLong(level);
+            if (!py_level)
+                goto bad;
+            module = PyObject_CallFunctionObjArgs(py_import,
+                name, global_dict, empty_dict, list, py_level, (PyObject *)NULL);
+            Py_DECREF(py_level);
+            #else
+            module = PyImport_ImportModuleLevelObject(
+                name, global_dict, empty_dict, list, level);
+            #endif
+        }
+    }
+bad:
+    #if PY_MAJOR_VERSION < 3
+    Py_XDECREF(py_import);
+    #endif
+    Py_XDECREF(empty_list);
+    Py_XDECREF(empty_dict);
+    return module;
 }
-static CYTHON_INLINE int __Pyx_object_dict_version_matches(PyObject* obj, PY_UINT64_T tp_dict_version, PY_UINT64_T obj_dict_version) {
-    PyObject *dict = Py_TYPE(obj)->tp_dict;
-    if (unlikely(!dict) || unlikely(tp_dict_version != __PYX_GET_DICT_VERSION(dict)))
-        return 0;
-    return obj_dict_version == __Pyx_get_object_dict_version(obj);
-}
-#endif
 
 /* CLineInTraceback */
 #ifndef CYTHON_CLINE_IN_TRACEBACK
