@@ -1,6 +1,4 @@
 /*
-*   $Id$
-*
 *   Copyright (c) 1996-2003, Darren Hiebert
 *
 *   This source code is released for the public domain.
@@ -12,7 +10,7 @@
 *   support to a software tool. The tag lookups provided are sufficiently fast
 *   enough to permit opening a sorted tag file, searching for a matching tag,
 *   then closing the tag file each time a tag is looked up (search times are
-*   on the order of hundreths of a second, even for huge tag files). This is
+*   on the order of hundredths of a second, even for huge tag files). This is
 *   the recommended use of this library for most tool applications. Adhering
 *   to this approach permits a user to regenerate a tag file at will without
 *   the tool needing to detect and resynchronize with changes to the tag file.
@@ -108,7 +106,8 @@ typedef struct {
 		/* name of tag */
 	const char *name;
 
-		/* path of source file containing definition of tag */
+		/* path of source file containing definition of tag.
+		   For a broken tags file, this can be NULL. */
 	const char *file;
 
 		/* address for locating tag in source file */
@@ -151,9 +150,11 @@ typedef struct {
 *  information about the tag file. If successful, the function will return a
 *  handle which must be supplied to other calls to read information from the
 *  tag file, and info.status.opened will be set to true. If unsuccessful,
+*  the function will return NULL, and
 *  info.status.opened will be set to false and info.status.error_number will
 *  be set to the errno value representing the system error preventing the tag
-*  file from being successfully opened.
+*  file from being successfully opened. The error_number will be zero if the
+*  memory allocation for the handle is failed.
 */
 extern tagFile *tagsOpen (const char *const filePath, tagFileInfo *const info);
 
@@ -215,11 +216,11 @@ extern const char *tagsField (const tagEntry *const entry, const char *const key
 *        Only tags whose full lengths match `name' will qualify.
 *
 *    TAG_IGNORECASE
-*        Matching will be performed in a case-insenstive manner. Note that
+*        Matching will be performed in a case-insensitive manner. Note that
 *        this disables binary searches of the tag file.
 *
 *    TAG_OBSERVECASE
-*        Matching will be performed in a case-senstive manner. Note that
+*        Matching will be performed in a case-sensitive manner. Note that
 *        this enables binary searches of the tag file.
 *
 *  The function will return TagSuccess if a tag matching the name is found, or
@@ -237,6 +238,19 @@ extern tagResult tagsFind (tagFile *const file, tagEntry *const entry, const cha
 extern tagResult tagsFindNext (tagFile *const file, tagEntry *const entry);
 
 /*
+*  Does the same as tagsFirst(), but is specialized to pseudo tags.
+*  If tagFileInfo doesn't contain pseudo tags you are interested, read
+*  them sequentially with this function and tagsNextPseudoTag().
+*/
+extern tagResult tagsFirstPseudoTag (tagFile *const file, tagEntry *const entry);
+
+/*
+*  Does the same as tagsNext(), but is specialized to pseudo tags. Use with
+*  tagsFirstPseudoTag().
+*/
+extern tagResult tagsNextPseudoTag (tagFile *const file, tagEntry *const entry);
+
+/*
 *  Call tagsTerminate() at completion of reading the tag file, which will
 *  close the file and free any internal memory allocated. The function will
 *  return TagFailure is no file is currently open, TagSuccess otherwise.
@@ -248,5 +262,3 @@ extern tagResult tagsClose (tagFile *const file);
 #endif
 
 #endif
-
-/* vi:set tabstop=4 shiftwidth=4: */

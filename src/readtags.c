@@ -53,7 +53,7 @@ struct sTagFile {
 		/* defines tag search state */
 	struct {
 				/* file position of last match for tag */
-			off_t pos; 
+			off_t pos;
 				/* name of tag last searched for */
 			char *name;
 				/* length of name for partial matches */
@@ -88,10 +88,64 @@ struct sTagFile {
 */
 static const char *const EmptyString = "";
 static const char *const PseudoTagPrefix = "!_";
+static const size_t PseudoTagPrefixLength = 2;
 
 /*
 *   FUNCTION DEFINITIONS
 */
+
+/* Converts a hexadecimal digit to its value */
+static int xdigitValue (char digit)
+{
+	if (digit >= '0' && digit <= '9')
+		return digit - '0';
+	else if (digit >= 'a' && digit <= 'f')
+		return 10 + digit - 'a';
+	else if (digit >= 'A' && digit <= 'F')
+		return 10 + digit - 'A';
+	else
+		return 0;
+}
+
+/*
+ * Reads the first character from the string, possibly un-escaping it, and
+ * advances *s to the start of the next character.
+ */
+static int readTagCharacter (const char **s)
+{
+	int c = **s;
+
+	(*s)++;
+
+	if (c == '\\')
+	{
+		switch (**s)
+		{
+			case 't': c = '\t'; (*s)++; break;
+			case 'r': c = '\r'; (*s)++; break;
+			case 'n': c = '\n'; (*s)++; break;
+			case '\\': c = '\\'; (*s)++; break;
+			/* Universal-CTags extensions */
+			case 'a': c = '\a'; (*s)++; break;
+			case 'b': c = '\b'; (*s)++; break;
+			case 'v': c = '\v'; (*s)++; break;
+			case 'f': c = '\f'; (*s)++; break;
+			case 'x':
+				if (isxdigit ((*s)[1]) && isxdigit ((*s)[2]))
+				{
+					int val = (xdigitValue ((*s)[1]) << 4) | xdigitValue ((*s)[2]);
+					if (val < 0x80)
+					{
+						(*s) += 3;
+						c = val;
+					}
+				}
+				break;
+		}
+	}
+
+	return c;
+}
 
 /*
  * Compare two strings, ignoring case.
@@ -100,23 +154,59 @@ static const char *const PseudoTagPrefix = "!_";
  * This makes a difference when one of the chars lies between upper and lower
  * ie. one of the chars [ \ ] ^ _ ` for ascii. (The '_' in particular !)
  */
-static int struppercmp (const char *s1, const char *s2)
+static int taguppercmp (const char *s1, const char *s2)
 {
 	int result;
+	int c1, c2;
 	do
 	{
-		result = toupper ((int) *s1) - toupper ((int) *s2);
-	} while (result == 0  &&  *s1++ != '\0'  &&  *s2++ != '\0');
+		c1 = *s1++;
+		c2 = readTagCharacter (&s2);
+
+		result = toupper (c1) - toupper (c2);
+	} while (result == 0  &&  c1 != '\0'  &&  c2 != '\0');
 	return result;
 }
 
-static int strnuppercmp (const char *s1, const char *s2, size_t n)
+static int tagnuppercmp (const char *s1, const char *s2, size_t n)
 {
 	int result;
+	int c1, c2;
 	do
 	{
-		result = toupper ((int) *s1) - toupper ((int) *s2);
-	} while (result == 0  &&  --n > 0  &&  *s1++ != '\0'  &&  *s2++ != '\0');
+		c1 = *s1++;
+		c2 = readTagCharacter (&s2);
+
+		result = toupper (c1) - toupper (c2);
+	} while (result == 0  &&  --n > 0  &&  c1 != '\0'  &&  c2 != '\0');
+	return result;
+}
+
+static int tagcmp (const char *s1, const char *s2)
+{
+	int result;
+	int c1, c2;
+	do
+	{
+		c1 = *s1++;
+		c2 = readTagCharacter (&s2);
+
+		result = c1 - c2;
+	} while (result == 0  &&  c1 != '\0'  &&  c2 != '\0');
+	return result;
+}
+
+static int tagncmp (const char *s1, const char *s2, size_t n)
+{
+	int result;
+	int c1, c2;
+	do
+	{
+		c1 = *s1++;
+		c2 = readTagCharacter (&s2);
+
+		result = c1 - c2;
+	} while (result == 0  &&  --n > 0  &&  c1 != '\0'  &&  c2 != '\0');
 	return result;
 }
 
@@ -129,7 +219,8 @@ static int growString (vstring *s)
 	{
 		newLength = 128;
 		newLine = (char*) malloc (newLength);
-		*newLine = '\0';
+		if (newLine)
+			*newLine = '\0';
 	}
 	else
 	{
@@ -249,6 +340,9 @@ static void parseExtensionFields (tagFile *const file, tagEntry *const entry,
 								  char *const string)
 {
 	char *p = string;
+	char *tail = string + (string? strlen(string):0);
+	size_t q_len;
+
 	while (p != NULL  &&  *p != '\0')
 	{
 		while (*p == TAB)
@@ -266,16 +360,48 @@ static void parseExtensionFields (tagFile *const file, tagEntry *const entry,
 			else
 			{
 				const char *key = field;
-				const char *value = colon + 1;
+				char *q = colon + 1;
+				const char *value = q;
+				const int key_len = colon - key;
 				*colon = '\0';
-				if (strcmp (key, "kind") == 0)
-					entry->kind = value;
-				else if (strcmp (key, "file") == 0)
-					entry->fileScope = 1;
-				else if (strcmp (key, "line") == 0)
-					entry->address.lineNumber = atol (value);
+
+				q_len = tail - q;
+
+				/* Unescaping */
+				while (*q != '\0')
+				{
+					const char *next = q;
+					int ch = readTagCharacter (&next);
+					size_t skip = next - q;
+
+					*q = (char) ch;
+					q++;
+					q_len -= skip;
+					if (skip > 1)
+					{
+						/* + 1 is for moving the area including the last '\0'. */
+						memmove (q, next, q_len + 1);
+						if (p)
+							p -= skip - 1;
+						if (tail != string)
+							tail -= skip - 1;
+					}
+				}
+
+				if (key_len == 4)
+				{
+					if (memcmp (key, "kind", 4) == 0)
+						entry->kind = value;
+					else if (memcmp (key, "file", 4) == 0)
+						entry->fileScope = 1;
+					else if (memcmp (key, "line", 4) == 0)
+						entry->address.lineNumber = atol (value);
+					else
+						goto normalField;
+				}
 				else
 				{
+				normalField:
 					if (entry->fields.count == file->fields.max)
 						growFields (file);
 					file->fields.list [entry->fields.count].key = key;
@@ -311,23 +437,49 @@ static void parseTagLine (tagFile *file, tagEntry *const entry)
 {
 	int i;
 	char *p = file->line.buffer;
+	size_t p_len = strlen (p);
 	char *tab = strchr (p, TAB);
 
-	entry->fields.list = NULL;
-	entry->fields.count = 0;
-	entry->kind = NULL;
-	entry->fileScope = 0;
+	memset(entry, 0, sizeof(*entry));
 
 	entry->name = p;
 	if (tab != NULL)
 	{
 		*tab = '\0';
+	}
+
+	/* When unescaping, the input string becomes shorter.
+	 * e.g. \t occupies two bytes on the tag file.
+	 * It is converted to 0x9 and occupies one byte.
+	 * memmove called here for shortening the line
+	 * buffer. */
+	while (*p != '\0')
+	{
+		const char *next = p;
+		int ch = readTagCharacter (&next);
+		size_t skip = next - p;
+
+		*p = (char) ch;
+		p++;
+		p_len -= skip;
+		if (skip > 1)
+		{
+			/* + 1 is for moving the area including the last '\0'. */
+			memmove (p, next, p_len + 1);
+			if (tab)
+				tab -= skip - 1;
+		}
+	}
+
+	if (tab != NULL)
+	{
 		p = tab + 1;
 		entry->file = p;
 		tab = strchr (p, TAB);
 		if (tab != NULL)
 		{
 			int fieldsPresent;
+			int combinedPattern;
 			*tab = '\0';
 			p = tab + 1;
 			if (*p == '/'  ||  *p == '?')
@@ -357,15 +509,43 @@ static void parseTagLine (tagFile *file, tagEntry *const entry)
 				entry->address.lineNumber = atol (p);
 				while (isdigit ((int) *(unsigned char*) p))
 					++p;
+				if (p)
+				{
+					combinedPattern = (strncmp (p, ";/", 2) == 0) ||
+											(strncmp (p, ";?", 2) == 0);
+					if (combinedPattern)
+					{
+						++p;
+						/* parse pattern */
+						int delimiter = *(unsigned char*) p;
+						do
+						{
+							p = strchr (p + 1, delimiter);
+						} while (p != NULL
+							 &&  isOdd (countContinuousBackslashesBackward (p - 1,
+													entry->address.pattern)));
+
+						if (p == NULL)
+						{
+							/* invalid pattern */
+						}
+						else
+							++p;
+					}
+				}
 			}
 			else
 			{
 				/* invalid pattern */
 			}
-			fieldsPresent = (strncmp (p, ";\"", 2) == 0);
-			*p = '\0';
-			if (fieldsPresent)
-				parseExtensionFields (file, entry, p + 2);
+
+			if (p)
+			{
+				fieldsPresent = (strncmp (p, ";\"", 2) == 0);
+				*p = '\0';
+				if (fieldsPresent)
+					parseExtensionFields (file, entry, p + 2);
+			}
 		}
 	}
 	if (entry->fields.count > 0)
@@ -389,6 +569,11 @@ static char *duplicate (const char *str)
 	return result;
 }
 
+static int isPseudoTagLine (const char *buffer)
+{
+	return (strncmp (buffer, PseudoTagPrefix, PseudoTagPrefixLength) == 0);
+}
+
 static void readPseudoTags (tagFile *const file, tagFileInfo *const info)
 {
 	fpos_t startOfLine;
@@ -407,7 +592,7 @@ static void readPseudoTags (tagFile *const file, tagFileInfo *const info)
 		fgetpos (file->fp, &startOfLine);
 		if (! readTagLine (file))
 			break;
-		if (strncmp (file->line.buffer, PseudoTagPrefix, prefixLength) != 0)
+		if (!isPseudoTagLine (file->line.buffer))
 			break;
 		else
 		{
@@ -442,17 +627,21 @@ static void readPseudoTags (tagFile *const file, tagFileInfo *const info)
 	fsetpos (file->fp, &startOfLine);
 }
 
+static int doesFilePointPseudoTag (tagFile *const file, void *unused)
+{
+	return isPseudoTagLine (file->name.buffer);
+}
+
 static void gotoFirstLogicalTag (tagFile *const file)
 {
 	fpos_t startOfLine;
-	const size_t prefixLength = strlen (PseudoTagPrefix);
 	rewind (file->fp);
 	while (1)
 	{
 		fgetpos (file->fp, &startOfLine);
 		if (! readTagLine (file))
 			break;
-		if (strncmp (file->line.buffer, PseudoTagPrefix, prefixLength) != 0)
+		if (!isPseudoTagLine (file->line.buffer))
 			break;
 	}
 	fsetpos (file->fp, &startOfLine);
@@ -463,29 +652,56 @@ static tagFile *initialize (const char *const filePath, tagFileInfo *const info)
 	tagFile *result = (tagFile*) calloc ((size_t) 1, sizeof (tagFile));
 	if (result != NULL)
 	{
-		growString (&result->line);
-		growString (&result->name);
+		if (growString (&result->line) == 0)
+			goto mem_error;
+		if (growString (&result->name) == 0)
+			goto mem_error;
 		result->fields.max = 20;
 		result->fields.list = (tagExtensionField*) calloc (
 			result->fields.max, sizeof (tagExtensionField));
+		if (result->fields.list == NULL)
+			goto mem_error;
 		result->fp = fopen (filePath, "rb");
 		if (result->fp == NULL)
 		{
-			free (result);
-			result = NULL;
-			info->status.error_number = errno;
+			if (info)
+				info->status.error_number = errno;
+			goto file_error;
 		}
 		else
 		{
-			fseek (result->fp, 0, SEEK_END);
+			if (fseek (result->fp, 0, SEEK_END) == -1)
+			{
+				if (info)
+					info->status.error_number = errno;
+				goto file_error;
+			}
 			result->size = ftell (result->fp);
+			if (result->size == -1)
+			{
+				if (info)
+					info->status.error_number = errno;
+				goto file_error;
+			}
 			rewind (result->fp);
 			readPseudoTags (result, info);
-			info->status.opened = 1;
+			if (info)
+				info->status.opened = 1;
 			result->initialized = 1;
 		}
 	}
 	return result;
+ mem_error:
+	if (info)
+		info->status.error_number = 0;
+ file_error:
+	free (result->line.buffer);
+	free (result->name.buffer);
+	free (result->fields.list);
+	free (result);
+	if (info)
+		info->status.opened = 0;
+	return NULL;
 }
 
 static void terminate (tagFile *const file)
@@ -561,18 +777,18 @@ static int nameComparison (tagFile *const file)
 	if (file->search.ignorecase)
 	{
 		if (file->search.partial)
-			result = strnuppercmp (file->search.name, file->name.buffer,
+			result = tagnuppercmp (file->search.name, file->name.buffer,
 					file->search.nameLength);
 		else
-			result = struppercmp (file->search.name, file->name.buffer);
+			result = taguppercmp (file->search.name, file->name.buffer);
 	}
 	else
 	{
 		if (file->search.partial)
-			result = strncmp (file->search.name, file->name.buffer,
+			result = tagncmp (file->search.name, file->name.buffer,
 					file->search.nameLength);
 		else
-			result = strcmp (file->search.name, file->name.buffer);
+			result = tagcmp (file->search.name, file->name.buffer);
 	}
 	return result;
 }
@@ -653,18 +869,30 @@ static tagResult findBinary (tagFile *const file)
 	return result;
 }
 
-static tagResult findSequential (tagFile *const file)
+static tagResult findSequentialFull (tagFile *const file,
+									 int (* isAcceptable) (tagFile *const, void *),
+									 void *data)
 {
 	tagResult result = TagFailure;
 	if (file->initialized)
 	{
 		while (result == TagFailure  &&  readTagLine (file))
 		{
-			if (nameComparison (file) == 0)
+			if (isAcceptable (file, data))
 				result = TagSuccess;
 		}
 	}
 	return result;
+}
+
+static int nameAcceptable (tagFile *const file, void *unused)
+{
+	return (nameComparison (file) == 0);
+}
+
+static tagResult findSequential (tagFile *const file)
+{
+	return findSequentialFull (file, nameAcceptable, NULL);
 }
 
 static tagResult find (tagFile *const file, tagEntry *const entry,
@@ -707,24 +935,50 @@ static tagResult find (tagFile *const file, tagEntry *const entry,
 	return result;
 }
 
-static tagResult findNext (tagFile *const file, tagEntry *const entry)
+static tagResult findNextFull (tagFile *const file, tagEntry *const entry,
+							   int sorted,
+							   int (* isAcceptable) (tagFile *const, void *),
+							   void *data)
 {
 	tagResult result;
-	if ((file->sortMethod == TAG_SORTED      && !file->search.ignorecase) ||
-		(file->sortMethod == TAG_FOLDSORTED  &&  file->search.ignorecase))
+	if (sorted)
 	{
 		result = tagsNext (file, entry);
-		if (result == TagSuccess  && nameComparison (file) != 0)
+		if (result == TagSuccess  && !isAcceptable (file, data))
 			result = TagFailure;
 	}
 	else
 	{
-		result = findSequential (file);
+		result = findSequentialFull (file, isAcceptable, data);
 		if (result == TagSuccess  &&  entry != NULL)
 			parseTagLine (file, entry);
 	}
 	return result;
 }
+
+static tagResult findNext (tagFile *const file, tagEntry *const entry)
+{
+	return findNextFull (file, entry,
+						 (file->sortMethod == TAG_SORTED      && !file->search.ignorecase) ||
+						 (file->sortMethod == TAG_FOLDSORTED  &&  file->search.ignorecase),
+						 nameAcceptable, NULL);
+}
+
+static tagResult findPseudoTag (tagFile *const file, int rewindBeforeFinding, tagEntry *const entry)
+{
+	tagResult result = TagFailure;
+	if (file != NULL  &&  file->initialized)
+	{
+		if (rewindBeforeFinding)
+			rewind (file->fp);
+		result = findNextFull (file, entry,
+							   (file->sortMethod == TAG_SORTED || file->sortMethod == TAG_FOLDSORTED),
+							   doesFilePointPseudoTag,
+							   NULL);
+	}
+	return result;
+}
+
 
 /*
 *  EXTERNAL INTERFACE
@@ -790,6 +1044,16 @@ extern tagResult tagsFindNext (tagFile *const file, tagEntry *const entry)
 	return result;
 }
 
+extern tagResult tagsFirstPseudoTag (tagFile *const file, tagEntry *const entry)
+{
+	return findPseudoTag (file, 1, entry);
+}
+
+extern tagResult tagsNextPseudoTag (tagFile *const file, tagEntry *const entry)
+{
+	return findPseudoTag (file, 0, entry);
+}
+
 extern tagResult tagsClose (tagFile *const file)
 {
 	tagResult result = TagFailure;
@@ -800,5 +1064,3 @@ extern tagResult tagsClose (tagFile *const file)
 	}
 	return result;
 }
-
-/* vi:set tabstop=4 shiftwidth=4: */
