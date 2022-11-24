@@ -1515,8 +1515,11 @@ static PyObject *__pyx_pf_9_readtags_5CTags_10first(struct __pyx_obj_9_readtags_
 static PyObject *__pyx_pf_9_readtags_5CTags_12find(struct __pyx_obj_9_readtags_CTags *__pyx_v_self, struct __pyx_obj_9_readtags_TagEntry *__pyx_v_entry, char *__pyx_v_name, int __pyx_v_options); /* proto */
 static PyObject *__pyx_pf_9_readtags_5CTags_14findNext(struct __pyx_obj_9_readtags_CTags *__pyx_v_self, struct __pyx_obj_9_readtags_TagEntry *__pyx_v_entry); /* proto */
 static PyObject *__pyx_pf_9_readtags_5CTags_16next(struct __pyx_obj_9_readtags_CTags *__pyx_v_self, struct __pyx_obj_9_readtags_TagEntry *__pyx_v_entry); /* proto */
-static PyObject *__pyx_pf_9_readtags_5CTags_18__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_9_readtags_CTags *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_9_readtags_5CTags_20__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_9_readtags_CTags *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
+static PyObject *__pyx_pf_9_readtags_5CTags_18firstPseudoTag(struct __pyx_obj_9_readtags_CTags *__pyx_v_self, struct __pyx_obj_9_readtags_TagEntry *__pyx_v_entry); /* proto */
+static PyObject *__pyx_pf_9_readtags_5CTags_20findPseudoTag(struct __pyx_obj_9_readtags_CTags *__pyx_v_self, struct __pyx_obj_9_readtags_TagEntry *__pyx_v_entry, char *__pyx_v_name, int __pyx_v_options); /* proto */
+static PyObject *__pyx_pf_9_readtags_5CTags_22nextPseudoTag(struct __pyx_obj_9_readtags_CTags *__pyx_v_self, struct __pyx_obj_9_readtags_TagEntry *__pyx_v_entry); /* proto */
+static PyObject *__pyx_pf_9_readtags_5CTags_24__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_9_readtags_CTags *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_9_readtags_5CTags_26__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_9_readtags_CTags *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
 static PyObject *__pyx_tp_new_9_readtags_TagEntry(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_9_readtags_CTags(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tuple_;
@@ -3612,6 +3615,7 @@ static PyObject *__pyx_pf_9_readtags_5CTags_14findNext(struct __pyx_obj_9_readta
  * 
  *     def next(self, TagEntry entry):             # <<<<<<<<<<<<<<
  *         return ctagsNext(self.file, &entry.c_entry)
+ * 
  */
 
 /* Python wrapper */
@@ -3648,6 +3652,8 @@ static PyObject *__pyx_pf_9_readtags_5CTags_16next(struct __pyx_obj_9_readtags_C
  * 
  *     def next(self, TagEntry entry):
  *         return ctagsNext(self.file, &entry.c_entry)             # <<<<<<<<<<<<<<
+ * 
+ *     def firstPseudoTag(self, TagEntry entry):
  */
   __Pyx_XDECREF(__pyx_r);
   __pyx_t_1 = __Pyx_PyInt_From_tagResult(tagsNext(__pyx_v_self->file, (&__pyx_v_entry->c_entry))); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 146, __pyx_L1_error)
@@ -3661,12 +3667,281 @@ static PyObject *__pyx_pf_9_readtags_5CTags_16next(struct __pyx_obj_9_readtags_C
  * 
  *     def next(self, TagEntry entry):             # <<<<<<<<<<<<<<
  *         return ctagsNext(self.file, &entry.c_entry)
+ * 
  */
 
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_AddTraceback("_readtags.CTags.next", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "_readtags.pyx":148
+ *         return ctagsNext(self.file, &entry.c_entry)
+ * 
+ *     def firstPseudoTag(self, TagEntry entry):             # <<<<<<<<<<<<<<
+ *         return ctagsFirstPseudoTag(self.file, &entry.c_entry)
+ * 
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_9_readtags_5CTags_19firstPseudoTag(PyObject *__pyx_v_self, PyObject *__pyx_v_entry); /*proto*/
+static PyObject *__pyx_pw_9_readtags_5CTags_19firstPseudoTag(PyObject *__pyx_v_self, PyObject *__pyx_v_entry) {
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("firstPseudoTag (wrapper)", 0);
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_entry), __pyx_ptype_9_readtags_TagEntry, 1, "entry", 0))) __PYX_ERR(1, 148, __pyx_L1_error)
+  __pyx_r = __pyx_pf_9_readtags_5CTags_18firstPseudoTag(((struct __pyx_obj_9_readtags_CTags *)__pyx_v_self), ((struct __pyx_obj_9_readtags_TagEntry *)__pyx_v_entry));
+
+  /* function exit code */
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_9_readtags_5CTags_18firstPseudoTag(struct __pyx_obj_9_readtags_CTags *__pyx_v_self, struct __pyx_obj_9_readtags_TagEntry *__pyx_v_entry) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("firstPseudoTag", 0);
+
+  /* "_readtags.pyx":149
+ * 
+ *     def firstPseudoTag(self, TagEntry entry):
+ *         return ctagsFirstPseudoTag(self.file, &entry.c_entry)             # <<<<<<<<<<<<<<
+ * 
+ *     def findPseudoTag(self, TagEntry entry, char* name, int options):
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = __Pyx_PyInt_From_tagResult(tagsFirstPseudoTag(__pyx_v_self->file, (&__pyx_v_entry->c_entry))); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 149, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "_readtags.pyx":148
+ *         return ctagsNext(self.file, &entry.c_entry)
+ * 
+ *     def firstPseudoTag(self, TagEntry entry):             # <<<<<<<<<<<<<<
+ *         return ctagsFirstPseudoTag(self.file, &entry.c_entry)
+ * 
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("_readtags.CTags.firstPseudoTag", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "_readtags.pyx":151
+ *         return ctagsFirstPseudoTag(self.file, &entry.c_entry)
+ * 
+ *     def findPseudoTag(self, TagEntry entry, char* name, int options):             # <<<<<<<<<<<<<<
+ *         return ctagsFindPseudoTag(self.file, &entry.c_entry, name, options)
+ * 
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_9_readtags_5CTags_21findPseudoTag(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_9_readtags_5CTags_21findPseudoTag(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  struct __pyx_obj_9_readtags_TagEntry *__pyx_v_entry = 0;
+  char *__pyx_v_name;
+  int __pyx_v_options;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("findPseudoTag (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_entry,&__pyx_n_s_name,&__pyx_n_s_options,0};
+    PyObject* values[3] = {0,0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+        CYTHON_FALLTHROUGH;
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_entry)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_name)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("findPseudoTag", 1, 3, 3, 1); __PYX_ERR(1, 151, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  2:
+        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_options)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("findPseudoTag", 1, 3, 3, 2); __PYX_ERR(1, 151, __pyx_L3_error)
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "findPseudoTag") < 0)) __PYX_ERR(1, 151, __pyx_L3_error)
+      }
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+      values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+    }
+    __pyx_v_entry = ((struct __pyx_obj_9_readtags_TagEntry *)values[0]);
+    __pyx_v_name = __Pyx_PyObject_AsWritableString(values[1]); if (unlikely((!__pyx_v_name) && PyErr_Occurred())) __PYX_ERR(1, 151, __pyx_L3_error)
+    __pyx_v_options = __Pyx_PyInt_As_int(values[2]); if (unlikely((__pyx_v_options == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 151, __pyx_L3_error)
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("findPseudoTag", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 151, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("_readtags.CTags.findPseudoTag", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_entry), __pyx_ptype_9_readtags_TagEntry, 1, "entry", 0))) __PYX_ERR(1, 151, __pyx_L1_error)
+  __pyx_r = __pyx_pf_9_readtags_5CTags_20findPseudoTag(((struct __pyx_obj_9_readtags_CTags *)__pyx_v_self), __pyx_v_entry, __pyx_v_name, __pyx_v_options);
+
+  /* function exit code */
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_9_readtags_5CTags_20findPseudoTag(struct __pyx_obj_9_readtags_CTags *__pyx_v_self, struct __pyx_obj_9_readtags_TagEntry *__pyx_v_entry, char *__pyx_v_name, int __pyx_v_options) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("findPseudoTag", 0);
+
+  /* "_readtags.pyx":152
+ * 
+ *     def findPseudoTag(self, TagEntry entry, char* name, int options):
+ *         return ctagsFindPseudoTag(self.file, &entry.c_entry, name, options)             # <<<<<<<<<<<<<<
+ * 
+ *     def nextPseudoTag(self, TagEntry entry):
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = __Pyx_PyInt_From_tagResult(tagsFindPseudoTag(__pyx_v_self->file, (&__pyx_v_entry->c_entry), __pyx_v_name, __pyx_v_options)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 152, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "_readtags.pyx":151
+ *         return ctagsFirstPseudoTag(self.file, &entry.c_entry)
+ * 
+ *     def findPseudoTag(self, TagEntry entry, char* name, int options):             # <<<<<<<<<<<<<<
+ *         return ctagsFindPseudoTag(self.file, &entry.c_entry, name, options)
+ * 
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("_readtags.CTags.findPseudoTag", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "_readtags.pyx":154
+ *         return ctagsFindPseudoTag(self.file, &entry.c_entry, name, options)
+ * 
+ *     def nextPseudoTag(self, TagEntry entry):             # <<<<<<<<<<<<<<
+ *         return ctagsNextPseudoTag(self.file, &entry.c_entry)
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_9_readtags_5CTags_23nextPseudoTag(PyObject *__pyx_v_self, PyObject *__pyx_v_entry); /*proto*/
+static PyObject *__pyx_pw_9_readtags_5CTags_23nextPseudoTag(PyObject *__pyx_v_self, PyObject *__pyx_v_entry) {
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("nextPseudoTag (wrapper)", 0);
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_entry), __pyx_ptype_9_readtags_TagEntry, 1, "entry", 0))) __PYX_ERR(1, 154, __pyx_L1_error)
+  __pyx_r = __pyx_pf_9_readtags_5CTags_22nextPseudoTag(((struct __pyx_obj_9_readtags_CTags *)__pyx_v_self), ((struct __pyx_obj_9_readtags_TagEntry *)__pyx_v_entry));
+
+  /* function exit code */
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_9_readtags_5CTags_22nextPseudoTag(struct __pyx_obj_9_readtags_CTags *__pyx_v_self, struct __pyx_obj_9_readtags_TagEntry *__pyx_v_entry) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("nextPseudoTag", 0);
+
+  /* "_readtags.pyx":155
+ * 
+ *     def nextPseudoTag(self, TagEntry entry):
+ *         return ctagsNextPseudoTag(self.file, &entry.c_entry)             # <<<<<<<<<<<<<<
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = __Pyx_PyInt_From_tagResult(tagsNextPseudoTag(__pyx_v_self->file, (&__pyx_v_entry->c_entry))); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 155, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "_readtags.pyx":154
+ *         return ctagsFindPseudoTag(self.file, &entry.c_entry, name, options)
+ * 
+ *     def nextPseudoTag(self, TagEntry entry):             # <<<<<<<<<<<<<<
+ *         return ctagsNextPseudoTag(self.file, &entry.c_entry)
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("_readtags.CTags.nextPseudoTag", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -3681,19 +3956,19 @@ static PyObject *__pyx_pf_9_readtags_5CTags_16next(struct __pyx_obj_9_readtags_C
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_9_readtags_5CTags_19__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyObject *__pyx_pw_9_readtags_5CTags_19__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_9_readtags_5CTags_25__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyObject *__pyx_pw_9_readtags_5CTags_25__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__reduce_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_9_readtags_5CTags_18__reduce_cython__(((struct __pyx_obj_9_readtags_CTags *)__pyx_v_self));
+  __pyx_r = __pyx_pf_9_readtags_5CTags_24__reduce_cython__(((struct __pyx_obj_9_readtags_CTags *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_9_readtags_5CTags_18__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_9_readtags_CTags *__pyx_v_self) {
+static PyObject *__pyx_pf_9_readtags_5CTags_24__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_9_readtags_CTags *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -3738,19 +4013,19 @@ static PyObject *__pyx_pf_9_readtags_5CTags_18__reduce_cython__(CYTHON_UNUSED st
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_9_readtags_5CTags_21__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
-static PyObject *__pyx_pw_9_readtags_5CTags_21__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pw_9_readtags_5CTags_27__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
+static PyObject *__pyx_pw_9_readtags_5CTags_27__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__setstate_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_9_readtags_5CTags_20__setstate_cython__(((struct __pyx_obj_9_readtags_CTags *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
+  __pyx_r = __pyx_pf_9_readtags_5CTags_26__setstate_cython__(((struct __pyx_obj_9_readtags_CTags *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_9_readtags_5CTags_20__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_9_readtags_CTags *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pf_9_readtags_5CTags_26__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_9_readtags_CTags *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -3972,8 +4247,11 @@ static PyMethodDef __pyx_methods_9_readtags_CTags[] = {
   {"find", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_9_readtags_5CTags_13find, METH_VARARGS|METH_KEYWORDS, 0},
   {"findNext", (PyCFunction)__pyx_pw_9_readtags_5CTags_15findNext, METH_O, 0},
   {"next", (PyCFunction)__pyx_pw_9_readtags_5CTags_17next, METH_O, 0},
-  {"__reduce_cython__", (PyCFunction)__pyx_pw_9_readtags_5CTags_19__reduce_cython__, METH_NOARGS, 0},
-  {"__setstate_cython__", (PyCFunction)__pyx_pw_9_readtags_5CTags_21__setstate_cython__, METH_O, 0},
+  {"firstPseudoTag", (PyCFunction)__pyx_pw_9_readtags_5CTags_19firstPseudoTag, METH_O, 0},
+  {"findPseudoTag", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_9_readtags_5CTags_21findPseudoTag, METH_VARARGS|METH_KEYWORDS, 0},
+  {"nextPseudoTag", (PyCFunction)__pyx_pw_9_readtags_5CTags_23nextPseudoTag, METH_O, 0},
+  {"__reduce_cython__", (PyCFunction)__pyx_pw_9_readtags_5CTags_25__reduce_cython__, METH_NOARGS, 0},
+  {"__setstate_cython__", (PyCFunction)__pyx_pw_9_readtags_5CTags_27__setstate_cython__, METH_O, 0},
   {0, 0, 0, 0}
 };
 
