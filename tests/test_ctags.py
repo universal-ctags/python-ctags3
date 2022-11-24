@@ -45,6 +45,46 @@ class TestCTagsParse(TestCase):
             ],
         )
 
+    def test_ptag_find(self):
+        entry = ctags.TagEntry()
+        self.ctags.findPseudoTag(entry, b"!_TAG_PROGRAM_URL", ctags.TAG_FULLMATCH)
+        entry_info = [
+            entry[_] for _ in ("file", "name", "pattern")
+        ]
+        self.assertEqual(
+            entry_info,
+            [
+                b"http://ctags.sourceforge.net",
+                b"!_TAG_PROGRAM_URL",
+                b"/official site/",
+            ],
+        )
+
+        self.ctags.nextPseudoTag(entry)
+        entry_info = [
+            entry[_] for _ in ("file", "name", "pattern")
+        ]
+        self.assertEqual(
+            entry_info,
+            [
+                b"5.6b1",
+                b"!_TAG_PROGRAM_VERSION",
+                b"//",
+            ],
+        )
+
+        self.ctags.firstPseudoTag(entry)
+        entry_info = [
+            entry[_] for _ in ("file", "name", "pattern")
+        ]
+        self.assertEqual(
+            entry_info,
+            [
+                b"2",
+                b"!_TAG_FILE_FORMAT",
+                b"/extended format; --format=1 will not append ;\" to lines/",
+            ],
+        )
 
 class TestCTagsParseBytes(TestCTagsParse):
     def setUp(self):

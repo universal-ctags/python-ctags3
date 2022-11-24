@@ -83,4 +83,7 @@ cdef extern from "readtags.h":
     tagResult ctagsFind "tagsFind" (tagFile *file, tagEntry *entry, char *name, int options)
     tagResult ctagsNext "tagsNext" (tagFile *file, tagEntry *entry)
     tagResult ctagsFindNext "tagsFindNext" (tagFile *file, tagEntry *entry)
+    tagResult ctagsFirstPseudoTag "tagsFirstPseudoTag" (tagFile *file, tagEntry *entry)
+    tagResult ctagsNextPseudoTag "tagsNextPseudoTag" (tagFile *file, tagEntry *entry)
+    tagResult ctagsFindPseudoTag "tagsFindPseudoTag" (tagFile *file, tagEntry *entry, char *name, int options)
     tagResult ctagsClose "tagsClose" (tagFile *file)
