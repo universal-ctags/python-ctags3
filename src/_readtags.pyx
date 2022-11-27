@@ -144,3 +144,12 @@ cdef class CTags:
 
     def next(self, TagEntry entry):
         return ctagsNext(self.file, &entry.c_entry)
+
+    def firstPseudoTag(self, TagEntry entry):
+        return ctagsFirstPseudoTag(self.file, &entry.c_entry)
+
+    def findPseudoTag(self, TagEntry entry, char* name, int options):
+        return ctagsFindPseudoTag(self.file, &entry.c_entry, name, options)
+
+    def nextPseudoTag(self, TagEntry entry):
+        return ctagsNextPseudoTag(self.file, &entry.c_entry)
