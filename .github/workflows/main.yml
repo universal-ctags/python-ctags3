@@ -11,16 +11,15 @@ jobs:
     runs-on: ${{ matrix.platform }}
     strategy:
       matrix:
-        platform:
-          - ubuntu-latest
+        platform: [ubuntu-latest, macos-latest, windows-latest]
         python-version:
           - 2.7
-          - 3.5
-          - 3.6
-          - 3.7
-          - 3.8
-          - 3.9
-          - '3.10'
+          #- 3.5
+          #- 3.6
+          #- 3.7
+          #- 3.8
+          #- 3.9
+          #- '3.10'
           - 3.11
         include:
           - {platform: ubuntu-18.04, python-version: 3.4}
@@ -42,8 +41,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install tox cython
-          pip install tox-gh-actions || true
+          pip install tox-gh-actions || true  # tox-gh-actions does not support Python 3.4
       - name: Test with tox
         run: tox
-        env:
-          PLATFORM: ${{ matrix.platform }}
