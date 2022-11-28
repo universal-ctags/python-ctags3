@@ -21,9 +21,11 @@ jobs:
           - 3.9
           - '3.10'
           - 3.11
+        exclude:
+          - {platform: windows-latest, python-version: 2.7}    # Problem with MSVC version
         include:
-          - {platform: ubuntu-latest, python-version: 2.7}
-          - {platform: macos-latest, python-version: 2.7}
+          # - {platform: ubuntu-latest, python-version: 3.4}   # Not available
+          # - {platform: macos-latest, python-version: 3.4}    # Not available
           # - {platform: windows-latest, python-version: 3.4}  # Problem with "run: tox" below
           - {platform: ubuntu-18.04, python-version: 3.4}
     steps:
