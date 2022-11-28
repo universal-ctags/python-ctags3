@@ -10,10 +10,12 @@ jobs:
   build:
     runs-on: ${{ matrix.platform }}
     strategy:
+      fail-fast: false
       matrix:
         platform: [ubuntu-latest, macos-latest, windows-latest]
         python-version:
           - 2.7
+          - 3.4
           #- 3.5
           #- 3.6
           #- 3.7
@@ -29,10 +31,10 @@ jobs:
           fetch-depth: 0
       # APT::Immediate-Configure=false is for avoding user-interaction.
       # See https://superuser.com/questions/199582/apt-error-could-not-perform-immediate-configuration-on.
-      - name: update package information
-        run: sudo apt-get -y -o APT::Immediate-Configure=false update
-      - name: install tools and libraries
-        run: sudo apt-get -y -o APT::Immediate-Configure=false install make
+      #- name: update package information
+      #  run: sudo apt-get -y -o APT::Immediate-Configure=false update
+      #- name: install tools and libraries
+      #  run: sudo apt-get -y -o APT::Immediate-Configure=false install make
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
