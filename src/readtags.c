@@ -42,9 +42,13 @@ typedef off_t rt_off_t;
 /* Information about current tag file */
 struct sTagFile {
 		/* has the file been opened and this structure initialized? */
-	short initialized;
+	unsigned char initialized;
 		/* format of tag file */
-	short format;
+	unsigned char format;
+		/* 1 "u-ctags" is set to !_TAG_OUTPUT_MODE pseudo tag
+		 * and "slash" is set to !_TAG_OUTPUT_FILESEP
+		 * pseudo tag in the tags file. */
+	unsigned char inputUCtagsMode;
 		/* how is the tag file sorted? */
 	tagSortType sortMethod;
 		/* pointer to file structure */
@@ -131,7 +135,7 @@ static int readtags_fseek(FILE *fp, rt_off_t pos, int whence)
 }
 
 /* Converts a hexadecimal digit to its value */
-static int xdigitValue (char digit)
+static int xdigitValue (unsigned char digit)
 {
 	if (digit >= '0' && digit <= '9')
 		return digit - '0';
@@ -147,38 +151,41 @@ static int xdigitValue (char digit)
  * Reads the first character from the string, possibly un-escaping it, and
  * advances *s to the start of the next character.
  */
-static int readTagCharacter (const char **s)
+static int readTagCharacter (const char **const s)
 {
-	int c = **(const unsigned char **)s;
+	const unsigned char *p = (const unsigned char *) *s;
+	int c = *p;
 
-	(*s)++;
+	p++;
 
 	if (c == '\\')
 	{
-		switch (**s)
+		switch (*p)
 		{
-			case 't': c = '\t'; (*s)++; break;
-			case 'r': c = '\r'; (*s)++; break;
-			case 'n': c = '\n'; (*s)++; break;
-			case '\\': c = '\\'; (*s)++; break;
+			case 't': c = '\t'; p++; break;
+			case 'r': c = '\r'; p++; break;
+			case 'n': c = '\n'; p++; break;
+			case '\\': c = '\\'; p++; break;
 			/* Universal-CTags extensions */
-			case 'a': c = '\a'; (*s)++; break;
-			case 'b': c = '\b'; (*s)++; break;
-			case 'v': c = '\v'; (*s)++; break;
-			case 'f': c = '\f'; (*s)++; break;
+			case 'a': c = '\a'; p++; break;
+			case 'b': c = '\b'; p++; break;
+			case 'v': c = '\v'; p++; break;
+			case 'f': c = '\f'; p++; break;
 			case 'x':
-				if (isxdigit ((*s)[1]) && isxdigit ((*s)[2]))
+				if (isxdigit (p[1]) && isxdigit (p[2]))
 				{
-					int val = (xdigitValue ((*s)[1]) << 4) | xdigitValue ((*s)[2]);
+					int val = (xdigitValue (p[1]) << 4) | xdigitValue (p[2]);
 					if (val < 0x80)
 					{
-						(*s) += 3;
+						p += 3;
 						c = val;
 					}
 				}
 				break;
 		}
 	}
+
+	*s = (const char *) p;
 
 	return c;
 }
@@ -519,6 +526,36 @@ static unsigned int countContinuousBackslashesBackward(const char *from,
 	return counter;
 }
 
+/* When unescaping, the input string becomes shorter.
+ * e.g. \t occupies two bytes on the tag file.
+ * It is converted to 0x9 and occupies one byte.
+ * memmove called here for shortening the line
+ * buffer. */
+static char *unescapeInPlace (char *q, char **tab, size_t *p_len)
+{
+	char *p = q;
+
+	while (*p != '\0')
+	{
+		const char *next = p;
+		int ch = readTagCharacter (&next);
+		size_t skip = next - p;
+
+		*p = (char) ch;
+		p++;
+		*p_len -= skip;
+		if (skip > 1)
+		{
+			/* + 1 is for moving the area including the last '\0'. */
+			memmove (p, next, *p_len + 1);
+			if (*tab)
+				*tab -= skip - 1;
+		}
+	}
+
+	return p;
+}
+
 static tagResult parseTagLine (tagFile *file, tagEntry *const entry, int *err)
 {
 	int i;
@@ -534,34 +571,22 @@ static tagResult parseTagLine (tagFile *file, tagEntry *const entry, int *err)
 		*tab = '\0';
 	}
 
-	/* When unescaping, the input string becomes shorter.
-	 * e.g. \t occupies two bytes on the tag file.
-	 * It is converted to 0x9 and occupies one byte.
-	 * memmove called here for shortening the line
-	 * buffer. */
-	while (*p != '\0')
-	{
-		const char *next = p;
-		int ch = readTagCharacter (&next);
-		size_t skip = next - p;
-
-		*p = (char) ch;
-		p++;
-		p_len -= skip;
-		if (skip > 1)
-		{
-			/* + 1 is for moving the area including the last '\0'. */
-			memmove (p, next, p_len + 1);
-			if (tab)
-				tab -= skip - 1;
-		}
-	}
+	p = unescapeInPlace (p, &tab, &p_len);
 
 	if (tab != NULL)
 	{
 		p = tab + 1;
 		entry->file = p;
 		tab = strchr (p, TAB);
+		if (file->inputUCtagsMode)
+		{
+			if (tab != NULL)
+			{
+				*tab = '\0';
+			}
+			p = unescapeInPlace (p, &tab, &p_len);
+		}
+
 		if (tab != NULL)
 		{
 			int fieldsPresent;
@@ -588,12 +613,12 @@ static tagResult parseTagLine (tagFile *file, tagEntry *const entry, int *err)
 				else
 					++p;
 			}
-			else if (isdigit ((int) *(unsigned char*) p))
+			else if (isdigit (*(unsigned char*) p))
 			{
 				/* parse line number */
 				entry->address.pattern = p;
 				entry->address.lineNumber = atol (p);
-				while (isdigit ((int) *(unsigned char*) p))
+				while (isdigit (*(unsigned char*) p))
 					++p;
 				if (p)
 				{
@@ -670,6 +695,8 @@ static tagResult readPseudoTags (tagFile *const file, tagFileInfo *const info)
 	int err = 0;
 	tagResult result = TagSuccess;
 	const size_t prefixLength = strlen (PseudoTagPrefix);
+	int tag_output_mode_u_ctags = 0;
+	int tag_output_filesep_slash = 0;
 
 	info->file.format     = 1;
 	info->file.sort       = TAG_UNSORTED;
@@ -717,7 +744,7 @@ static tagResult readPseudoTags (tagFile *const file, tagFileInfo *const info)
 					err = TagErrnoUnexpectedFormat;
 					break;
 				}
-				file->format = (short) m;
+				file->format = (unsigned char) m;
 			}
 			else if (strcmp (key, "TAG_PROGRAM_AUTHOR") == 0)
 			{
@@ -755,6 +782,16 @@ static tagResult readPseudoTags (tagFile *const file, tagFileInfo *const info)
 					break;
 				}
 			}
+			else if (strcmp (key, "TAG_OUTPUT_MODE") == 0)
+			{
+				if (strcmp (value, "u-ctags") == 0)
+					tag_output_mode_u_ctags = 1;
+			}
+			else if (strcmp (key, "TAG_OUTPUT_FILESEP") == 0)
+			{
+				if (strcmp (value, "slash") == 0)
+					tag_output_filesep_slash = 1;
+			}
 
 			info->file.format     = file->format;
 			info->file.sort       = file->sortMethod;
@@ -764,6 +801,10 @@ static tagResult readPseudoTags (tagFile *const file, tagFileInfo *const info)
 			info->program.version = file->program.version;
 		}
 	}
+
+	if (tag_output_mode_u_ctags && tag_output_filesep_slash)
+		file->inputUCtagsMode = 1;
+
 	if (fsetpos (file->fp, &startOfLine) < 0)
 		err = errno;
 
@@ -832,7 +873,16 @@ static tagFile *initialize (const char *const filePath, tagFileInfo *const info)
 		result->fields.max, sizeof (tagExtensionField));
 	if (result->fields.list == NULL)
 		goto mem_error;
-	result->fp = fopen (filePath, "rb");
+
+#if defined(__GLIBC__) && (__GLIBC__ >= 2) \
+	&& defined(__GLIBC_MINOR__) && (__GLIBC_MINOR__ >= 3)
+	result->fp = fopen (filePath, "rbm");
+#endif
+	if (result->fp == NULL)
+	{
+		errno = 0;
+		result->fp = fopen (filePath, "rb");
+	}
 	if (result->fp == NULL)
 	{
 		info->status.error_number = errno;
