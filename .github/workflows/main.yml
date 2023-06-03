@@ -24,6 +24,8 @@ jobs:
           - 3.11
         exclude:
           - {platform: windows-latest, python-version: 2.7}    # Problem with MSVC version
+          - {platform: ubuntu-latest, python-version: 3.5}     # Missing in GHA
+          - {platform: ubuntu-latest, python-version: 3.6}     # Missing in GHA
     steps:
       - uses: actions/checkout@v3
         with:
