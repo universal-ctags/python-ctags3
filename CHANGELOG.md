@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 1.6.0
+- Add wrappers for PseudoTags related APIs (Masatake YAMATO)
+
 ## Version 1.5.0
 - Support for str (rather than just bytes) file names
 
