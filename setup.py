@@ -16,7 +16,7 @@ doclines = __doc__.split("\n")
 
 setup(
     name='python-ctags3',
-    version='1.5.0' ,
+    version='1.6.0' ,
     description=doclines[0],
     long_description="\n".join(doclines[2:]),
     author='Aaron H. K. Diep',
@@ -41,7 +41,6 @@ setup(
         'Operating System :: POSIX',
         'Topic :: Software Development :: Libraries :: Python Modules',
         "Programming Language :: Python :: 2.7",
-        "Programming Language :: Python :: 3.4",
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
