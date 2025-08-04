@@ -48,8 +48,8 @@ except:
 #  error_number - errno value when 'opened' is false
 #  format - format of tag file (1 = original, 2 = extended)
 #  sort - how is the tag file sorted? 
-#  author - name of author of generating program (may be empy string)
-#  name - name of program (may be empy string)
+#  author - name of author of generating program (may be empty string)
+#  name - name of program (may be empty string)
 #  url - URL of distribution (may be empy string)
 #  version - program version (may be empty string)
 
