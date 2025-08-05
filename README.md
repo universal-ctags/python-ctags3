@@ -47,11 +47,11 @@ except:
 #  opened -  was the tag file successfully opened?
 #  error_number - errno value when 'opened' is false
 #  format - format of tag file (1 = original, 2 = extended)
-#  sort - how is the tag file sorted? 
-#  author - name of author of generating program (may be empy string)
-#  name - name of program (may be empy string)
-#  url - URL of distribution (may be empy string)
-#  version - program version (may be empty string)
+#  sort - how is the tag file sorted?
+#  author - name of author of generating program (may be an empty string)
+#  name - name of program (may be an empty string)
+#  url - URL of distribution (may be an empty string)
+#  version - program version (may be an empty string)
 
 print tagFile['name']
 print tagFile['author']
@@ -60,7 +60,7 @@ print tagFile['format']
 # Available sort type:
 #  TAG_UNSORTED, TAG_SORTED, TAG_FOLDSORTED
 
-# Note: use this only if you know how the tags file is sorted which is 
+# Note: use this only if you know how the tags file is sorted which is
 # specified when you generate the tag file
 status = tagFile.setSortType(ctags.TAG_SORTED)
 ```
@@ -78,17 +78,17 @@ if status:
     #  lineNumber - line number in source file of tag definition (may be zero if not known)
     #  kind - kind of tag (none if not known)
     #  fileScope - is tag of file-limited scope?
-    
-    # Note: other keys will be assumed as an extension key and will 
-    # return None if no such key is found 
+
+    # Note: other keys will be assumed as an extension key and will
+    # return None if no such key is found
 
     print entry['name']
     print entry['kind']
 ```
 
 **Finding a Tag Entry**
-```python   
-# Available options: 
+```python
+# Available options:
 # TAG_PARTIALMATCH - begin with
 # TAG_FULLMATCH - full length matching
 # TAG_IGNORECASE - disable binary search
@@ -100,7 +100,7 @@ if tagFile.find(entry, 'find', ctags.TAG_PARTIALMATCH | ctags.TAG_IGNORECASE):
     print entry['pattern']
     print entry['kind']
 
-# Find the next tag matching the name and options supplied to the 
+# Find the next tag matching the name and options supplied to the
 # most recent call to tagFile.find().  (replace the entry if found)
 status = tagFile.findNext(entry)
 
